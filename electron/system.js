@@ -29,7 +29,12 @@ ps.get(function(err, processes) {
     var sorted = _.sortBy(processes, 'cpu');
     var top5  = sorted.reverse().splice(0, 39);
  
-    console.log(top5);
+    for (i in top5) {
+       for (n in top5[i]) {
+         // alert(top5[i][n]);
+       }
+    }
 });
+
 
 
