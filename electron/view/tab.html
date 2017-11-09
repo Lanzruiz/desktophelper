@@ -84,6 +84,12 @@ textarea.form-control {
 .border-right {
    border-right: 1px solid #ccc;
 }
+.float-right {
+  float: right;
+}
+p.list-group-item-text {
+    font-size: 11px;
+}
 </style>
 </head>
 <body>
@@ -102,11 +108,20 @@ textarea.form-control {
          </div>
          <div class="col-sm-5">
             <h3>Incidents</h3>
-            <ul class="list-group margin-top-20px">
-              <li class="list-group-item active">New <span class="badge">Open</span></li>
-              <li class="list-group-item active">Deleted <span class="badge">Open</span></li>
-              <li class="list-group-item">Warnings <span class="badge">Closed</span></li>
-            </ul>
+            <div class="list-group">
+              <a href="#" class="list-group-item active">
+                <strong>First List Group Item.... <span class="badge float-right">Open</span></strong>
+                <p class="list-group-item-text">RR00221 <span class="float-right">A min Ago</span></p>
+              </a>
+              <a href="#" class="list-group-item">
+                <strong>Second List Group Item... <span class="badge float-right">Closed</span></strong>
+                <p class="list-group-item-text">MM203453 <span class="float-right">2 days Ago</span></p>
+              </a>
+              <a href="#" class="list-group-item">
+                <strong>Third List Group Item...<span class="badge float-right">Closed</span></strong>
+                <p class="list-group-item-text">RR00221 <span class="float-right">A day Ago</span></p>
+              </a>
+            </div>
          </div>
       </div>
   </div>
