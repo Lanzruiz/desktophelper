@@ -10,7 +10,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-body {font-family: "Lato", sans-serif;}
+body {font-family: "Lato", sans-serif; background-color: #ddd;}
 
 /* Style the tab */
 div.tab {
@@ -57,82 +57,59 @@ div.tab button.active {
 }
 
 .topright:hover {color: red;}
+.jumbotron {
+background: #358CCE;
+color: #FFF;
+border-radius: 0px;
+}
+.jumbotron-sm { padding-top: 24px;
+padding-bottom: 24px; }
+.jumbotron small {
+color: #FFF;
+}
+.h1 small {
+font-size: 24px;
+}
+.h3, h3 {
+    font-size: 20px;
+    color: #103f67;
+}
+textarea.form-control {
+    height: 171px;
+    margin-top: 23px;
+}
+.margin-top-20px {
+   margin-top: 20px;
+}
+.border-right {
+   border-right: 1px solid #ccc;
+}
 </style>
 </head>
 <body>
 
-
-    <div class="tab">
-       <button class="tablinks" onclick="openCity(event, 'London')" id="defaultOpen">System Information</button>
-       <button class="tablinks" onclick="openCity(event, 'Paris')">Running Process</button>
-    </div>
-
-    <div id="London" class="tabcontent">
-        
-           <div class="form-group margin-top">
-                <label for="email">Name:</label>
-                <input type="email" class="form-control" id="email" name="email">
-            </div>
-            <div class="form-group">
-                <label for="email">OS:</label>
-                <input type="email" class="form-control" id="email" name="email">
-            </div>
-            <div class="form-group">
-                <label for="email">Version:</label>
-                <input type="email" class="form-control" id="email" name="email">
-            </div>
-            <div class="form-group">
-                <label for="email">Description:</label>
-                <input type="email" class="form-control" id="email" name="email">
-            </div>
-            <div class="form-group">
-                <label for="email">Manufacturer:</label>
-                <input type="email" class="form-control" id="email" name="email">
-            </div>
-            <div class="form-group">
-                <label for="email">Model:</label>
-                <input type="email" class="form-control" id="email" name="email">
-            </div>
-            <div class="form-group">
-                <label for="email">Total Physical Memory:</label>
-                <input type="email" class="form-control" id="email" name="email">
-            </div>
-       
-    </div>
-
-    <div id="Paris" class="tabcontent">
-
-      <div class="container-liquid">
-           <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Process Name</th>
-        <th>Username</th>
-        <th>CPU</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>mary@example.com</td>
-      </tr>
-      <tr>
-        <td>July</td>
-        <td>Dooley</td>
-        <td>july@example.com</td>
-      </tr>
-    </tbody>
-  </table>
+  <div class="container-fluid">
+      <div class="row">
+         <div class="col-sm-7 border-right">
+            <h3>What can we help you with?</h3>
+             <form>
+              <div class="form-group">
+              
+                <textarea class="form-control" rows="5" id="comment"></textarea>
+                <button type="button" class="btn btn-primary btn-block btn-warning margin-top-20px">SUBMIT</button>
+              </div>
+            </form>
+         </div>
+         <div class="col-sm-5">
+            <h3>Incidents</h3>
+            <ul class="list-group margin-top-20px">
+              <li class="list-group-item active">New <span class="badge">Open</span></li>
+              <li class="list-group-item active">Deleted <span class="badge">Open</span></li>
+              <li class="list-group-item">Warnings <span class="badge">Closed</span></li>
+            </ul>
+         </div>
       </div>
-      
-    </div>
-
+  </div>
 
 
 <script>

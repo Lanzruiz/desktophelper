@@ -25,15 +25,35 @@ var _ = require('lodash');
 var ps = require('current-processes');
  
 ps.get(function(err, processes) {
- 
+    var myTableDiv = document.getElementById("metric_results")
     var sorted = _.sortBy(processes, 'cpu');
     var top5  = sorted.reverse().splice(0, 39);
+    var table = document.createElement('TABLE')
+     var tableBody = document.createElement('TBODY')
  
     for (i in top5) {
+
+       var tr = document.createElement('TR');
+       
        for (n in top5[i]) {
-         // alert(top5[i][n]);
+          //alert(top5[i][n]);
+        
+          
+          //console.log(top5[i][n]);
+            var td = document.createElement('TD');
+            td.appendChild(document.createTextNode(top5[i][n]));
+            tr.appendChild(td)
+        
        }
+
+       tableBody.appendChild(tr);
+
+
+       
     }
+
+    myTableDiv.appendChild(table);
+     
 });
 
 
