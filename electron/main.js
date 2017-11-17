@@ -12,12 +12,15 @@ const url = require('url')
 let mainWindow
 
 function createWindow () {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 378})
+ 
+   // Create the browser window for login
+  // mainWindow = new BrowserWindow({width: 350, height: 550}) 
+
+  mainWindow = new BrowserWindow({width: 350, height: 550}) 
 
   // and load the index.html of the app.
   mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'view/tab.html'),
+    pathname: path.join(__dirname, 'view/login.html'),
     protocol: 'file:',
     slashes: true
   }))
