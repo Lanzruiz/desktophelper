@@ -1,29 +1,15 @@
 {
-  "name": "electron-quick-start",
-  "version": "1.0.0",
-  "description": "A minimal Electron application",
-  "main": "main.js",
+  "name": "create-multi-window-electron-app",
+  "version": "0.1.0",
+  "description": "",
+  "main": "app.js",
   "scripts": {
     "start": "electron ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/electron/electron-quick-start.git"
-  },
-  "keywords": [
-    "Electron",
-    "quick",
-    "start",
-    "tutorial",
-    "demo"
-  ],
-  "author": "GitHub",
-  "license": "CC0-1.0",
+  "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
+  "license": "MIT",
   "devDependencies": {
-    "electron": "1.7.9"
-  },
-  "bugs": {
-    "url": "https://github.com/electron/electron-quick-start/issues"
-  },
-  "homepage": "https://github.com/electron/electron-quick-start#readme"
+    "electron": "1.7.9",
+    "electron-prebuilt": "^0.28.3"
+  }
 }
