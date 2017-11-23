@@ -15,11 +15,11 @@ app.on('ready', function () {
   agentWindow.loadURL('file://' + __dirname + '/view/tab.html')
 
   var serviceWindow = new BrowserWindow({
-    width: 700,
-    height: 400,
+    width: 1300,
+    height: 800,
     show: false
   })
-  serviceWindow.loadURL('file://' + __dirname + '/view/service.html')
+  serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html')
 
   ipcMain.on('agent', function () {
     if (agentWindow.isVisible())
