@@ -9,6 +9,7 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://use.fontawesome.com/7ccc0a505e.js"></script>
 <style>
 body {font-family: "Lato", sans-serif; background-color: #ddd;}
 
@@ -75,7 +76,7 @@ font-size: 24px;
     color: #103f67;
 }
 textarea.form-control {
-    height: 171px;
+    height: 230px;
     margin-top: 23px;
 }
 .margin-top-20px {
@@ -88,16 +89,70 @@ textarea.form-control {
   float: right;
 }
 p.list-group-item-text {
+    font-size: 10px;
+}
+strong.list-group-item-text {
     font-size: 11px;
+}
+.header-up {
+            
+    background: #003a63;
+    display: block;
+}
+.aloricalogo {
+            
+    width: 15%;
+          
+    padding: 10px; 
+}
+.orange {
+
+    color: #;
+}
+.list-group-item {
+
+   padding-top: 8px;
+   padding-bottom: 8px;
+}
+
+#imaginary_container{
+    margin-top:20%; /* Don't copy this */
+    float:left;
+}
+.stylish-input-group {
+    margin-top: 19px;
+    margin-bottom: 10px;
+}
+.stylish-input-group .input-group-addon{
+    background: white !important; 
+    
+}
+.stylish-input-group .form-control{
+  border-right:0; 
+  box-shadow:0 0 0; 
+  border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
+.center {
+   display:table; margin:0 auto; margin-top: -13px
 }
 </style>
 </head>
 <body>
-
+  <div class="header-up">
+     <img class="aloricalogo" src="../view/img/Alorica_Logo_White_Orange.png">
+     <div style="float: right; padding-top:30px; padding-right: 30px; color: #FFF; padding-bottom: 5px; padding-left: 10px;">
+           <i class="fa fa-minus" style="margin-left: 30px;" aria-hidden="true"></i>
+          <i class="fa fa-power-off" style="margin-left: 30px; margin-top: -30px" aria-hidden="true"></i>
+     </div>
+  </div>
   <div class="container-fluid">
       <div class="row">
          <div class="col-sm-7 border-right">
-            <h3>What can we help you with?</h3>
+            <h3><strong>Good Day Lanz!</strong> What can we help you with?</h3>
              <form>
               <div class="form-group">
               
@@ -107,7 +162,18 @@ p.list-group-item-text {
             </form>
          </div>
          <div class="col-sm-5">
-            <h3>Incidents</h3>
+            <h3 style="float: right;">Incidents</h3> 
+            <h3 style="float: left;">Help Me</h3>
+       
+                <div class="input-group stylish-input-group">
+                    <input type="text" class="form-control"  placeholder="Search" >
+                    <span class="input-group-addon">
+                        <button type="submit">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </button>  
+                    </span>
+                </div>
+         
             <div class="list-group">
               <a href="#" class="list-group-item active">
                 <strong>First List Group Item.... <span class="badge float-right">Open</span></strong>
@@ -121,7 +187,19 @@ p.list-group-item-text {
                 <strong>Third List Group Item...<span class="badge float-right">Closed</span></strong>
                 <p class="list-group-item-text">RR00221 <span class="float-right">A day Ago</span></p>
               </a>
+              <a href="#" class="list-group-item">
+                <strong>Third List Group Item...<span class="badge float-right">Closed</span></strong>
+                <p class="list-group-item-text">RR00221 <span class="float-right">A day Ago</span></p>
+              </a>
             </div>
+             <ul class="pagination center">
+              <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              
+              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
          </div>
       </div>
   </div>
