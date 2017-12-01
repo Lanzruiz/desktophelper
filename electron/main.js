@@ -71,7 +71,7 @@ function send(e) {
           dataType: "json",
           url: url+"/tickets",
           headers: {
-            'Authorization': "Bearer "+store.get('helpme'),
+            'Authorization': "Bearer " + store.get('helpme'),
             'Content-Type': "application/json"
           },
           data: JSON.stringify(data),
@@ -142,7 +142,7 @@ function login(e){
                 data: JSON.stringify(data),
                 success: function(result, textstatus, xhr) {
 
-                    if(result.is_service_desk == "false") {
+                    if(!result.is_service_desk) {
 
                          console.log('test');
 
