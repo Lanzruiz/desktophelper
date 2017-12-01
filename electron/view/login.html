@@ -4,10 +4,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-
- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<script>window.$ = window.jQuery = require('jquery');</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" ></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Help Me!</title>
@@ -72,7 +72,7 @@
             <img class="servicenowlogo" src="../view/img/shutdown-hi.png">
             <p class="servicenowlabel">Login via Service Now</p>
           <div class="panel-body">
-            <form role="form" action="#" method="POST">
+     
               <fieldset>
                
                 <div class="row">
@@ -82,7 +82,7 @@
                         <span class="input-group-addon">
                           <i class="glyphicon glyphicon-user"></i>
                         </span> 
-                        <input class="form-control" placeholder="Username" name="loginname" type="text" autofocus>
+                        <input class="form-control" placeholder="Username" id="username" name="loginname" value="RR004288459" type="text" autofocus>
                       </div>
                     </div>
                     <div class="form-group">
@@ -90,16 +90,16 @@
                         <span class="input-group-addon">
                           <i class="glyphicon glyphicon-lock"></i>
                         </span>
-                        <input class="form-control" placeholder="Password" name="password" type="password" value="">
+                        <input class="form-control" placeholder="Password" id="password" name="password" value="Alorica8459" type="password" value="">
                       </div>
                     </div>
                     <div class="form-group">
-                      <input type="submit" class="btn btn-lg btn-primary btn-block btn-warning" onclick="login()" value="Submit">
+                      <input type="submit" class="btn btn-lg btn-primary btn-block btn-warning"  id="login" onclick="login(event)" value="Submit">
                     </div>
                   </div>
                 </div>
               </fieldset>
-            </form>
+          
           </div>
        
                 </div>
@@ -107,15 +107,5 @@
     </div>
   </div>
 </body>
-
-<script>
-   
-const {remote, ipcRenderer} = require('electron')
-
-
-function login(){
-    ipcRenderer.send('service')
-}
- </script>
-
+<script src="../main.js"></script>
 </html>

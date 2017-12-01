@@ -3,10 +3,10 @@
 <head>
 <link rel="stylesheet" href="dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="../view/css/main.css">
+<script>window.$ = window.jQuery = require('jquery');</script>
 <script src="dist/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <script src="https://use.fontawesome.com/7ccc0a505e.js"></script>
@@ -157,7 +157,7 @@ strong.list-group-item-text {
               <div class="form-group">
               
                 <textarea class="form-control" rows="5" id="comment"></textarea>
-                <button type="button" class="btn btn-primary btn-block btn-warning margin-top-20px">SUBMIT</button>
+                <button type="button" class="btn btn-primary btn-block btn-warning margin-top-20px" onclick="send(event)">SUBMIT</button>
               </div>
             </form>
          </div>
@@ -204,27 +204,7 @@ strong.list-group-item-text {
       </div>
   </div>
 
-
-<script>
-function openCity(evt, cityName) {
-    var i, tabcontent, tablinks;
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-        tabcontent[i].style.display = "none";
-    }
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-        tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-    document.getElementById(cityName).style.display = "block";
-    evt.currentTarget.className += " active";
-}
-
-// Get the element with id="defaultOpen" and click on it
-document.getElementById("defaultOpen").click();
-
- require('../system.js');
-</script>
+<script src="../main.js"></script>
 
 </body>
 </html> 

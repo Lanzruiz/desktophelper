@@ -1,18 +1,22 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 
+var testing = 'alorica';
+
 app.on('ready', function () {
   var mainWindow = new BrowserWindow({
     width: 350, 
     height: 500,
-    frame: false
+    //frame: false
   })
+
   mainWindow.loadURL('file://' + __dirname + '/view/login.html')
+  mainWindow.setResizable(false)
 
   var agentWindow = new BrowserWindow({
     width: 900,
     height: 450,
     show: false,
-    frame: false
+    //frame: false
   })
   agentWindow.loadURL('file://' + __dirname + '/view/tab.html')
   agentWindow.setResizable(false)
@@ -21,12 +25,12 @@ app.on('ready', function () {
     width: 1300,
     height: 800,
     show: false,
-    frame: false,
     resizable: false
   })
   serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html')
 
   ipcMain.on('agent', function () {
+     console.log('test');
     if (agentWindow.isVisible())
       agentWindow.hide()
      
@@ -36,6 +40,7 @@ app.on('ready', function () {
   })
 
   ipcMain.on('service', function () {
+
     if (serviceWindow.isVisible())
       serviceWindow.hide()
      
