@@ -4,7 +4,7 @@ const _ = require('lodash');
 const Store = require('electron-store');
 const store = new Store();
 
-const url = "http://1ccfe188.ngrok.io"; // "http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com" // "https://95674c68.ngrok.io";
+const url = "https://8a940d10.ngrok.io"; // "http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com" // "https://95674c68.ngrok.io";
 
 function login(e){
   //ipcRenderer.send('service')

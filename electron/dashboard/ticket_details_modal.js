@@ -1,7 +1,10 @@
 const Store = require('electron-store');
 const store = new Store();
 const _ = require('lodash');
-const {ipcRenderer} = require('electron');
+const {ipcRenderer, shell} = require('electron');
+
+const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
+
 
 const url = "https://1ccfe188.ngrok.io";
 
@@ -73,6 +76,11 @@ $(document).ready(function() {
   $('#close').click(function(e) {
     // reset();
     ipcRenderer.send('close-details');
+  });
+
+   $('#servicnow').click(function(e) {
+    let sysId = store.get('sys_id');
+    shell.openExternal(serviceNowBaseUrl + sysId);
   });
 
   let ticket = store.get('ticket');

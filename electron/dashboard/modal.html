@@ -12,6 +12,10 @@
     a#close {
       float: right;
     }
+    a#servicnow {
+      float: right;
+      margin-right: 20px;
+    }
   </style>
 </head>
 <body>
@@ -19,6 +23,7 @@
 <div class="container">
   <h2 id="incident-number">Dynamic Tabs</h2>
   <a id="close">Close</a>
+  <a id="servicnow">Service Now</a>
   <ul class="nav nav-tabs">
     <li class="active"><a href="#home">Incident Summary</a></li>
     <li><a href="#menu1">System Information</a></li>
@@ -28,13 +33,13 @@
   <div class="tab-content">
     <div id="home" class="tab-pane fade in active">
       <h3 id="incident-header">HOME</h3>
-      <p id="incident-summary-content">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+      <p id="incident-summary-content">Please wait...</p>
     </div>
     <div id="menu1" class="tab-pane fade">
-      <p id="incident-system-information">Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      <p id="incident-system-information">Please wait...</p>
     </div>
     <div id="menu2" class="tab-pane fade">
-      <p id="incident-running-processes">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+      <p id="incident-running-processes">Please wait...</p>
     </div>
     
   </div>

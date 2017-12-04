@@ -4,7 +4,7 @@ const store = new Store();
 const {ipcRenderer, shell} = require('electron')
 const _ = require('lodash');
 
-const url = "http://1ccfe188.ngrok.io"; //http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com";
+const url = "https://8a940d10.ngrok.io"; //http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com";
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 let allTickets = [];
@@ -45,7 +45,7 @@ $(document).ready(function() {
             "state": ticket.state,
             "sysId": ticket.sys_id,
             "actionOff": "<td data-ticket-number='" + ticket.number + "'><i class='fa fa-power-off action-off' data-ticket-sys-id='" + ticket.sys_id + "' data-ticket-number='" + ticket.number + "' aria-hidden='true'><p class='action-off' data-ticket-number='" + ticket.number + "' style='font-size:0px'>service</p></i></td>",
-            "actionView": "<td data-ticket-number='" + ticket.number + "'><i class='fa fa-server action-view' data-ticket-number='"+ticket.number+"' aria-hidden='true'><p style='font-size:0px' for='modal__trigger' class='action-view' data-ticket-number='"+ticket.number+"'>db</p></i></td>"
+            "actionView": "<td data-ticket-number='" + ticket.number + "'><i class='fa fa-server action-view' data-ticket-number='"+ticket.number+"'  data-ticket-sys-id='" + ticket.sys_id + "' aria-hidden='true'><p style='font-size:0px' for='modal__trigger' class='action-view' data-ticket-number='"+ticket.number+"'>db</p></i></td>"
           };
 
           allTickets.push(data);
@@ -81,7 +81,9 @@ $(document).ready(function() {
     console.log("ticketNumber: ", ticketNumber);
 
     let ticket = _.find(allTickets, {"number": ticketNumber});
+    let sysId = $(this).attr('data-ticket-sys-id');
     store.set('ticket', ticket);
+    store.set('sys_id', sysId);
 
     ipcRenderer.send('modal');
   });
