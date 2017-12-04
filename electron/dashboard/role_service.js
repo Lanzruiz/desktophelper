@@ -30,6 +30,11 @@ $(document).ready(function() {
       },
       success: function(results) {
 
+
+        document.getElementById("tickets").style.display = "block";
+
+         document.getElementById("loader").style.display = "none";
+
         console.log(results);
 
         let tickets = results;
