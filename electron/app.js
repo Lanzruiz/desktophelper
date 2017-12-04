@@ -4,7 +4,7 @@ var testing = 'alorica';
 
 app.on('ready', function () {
   var mainWindow = new BrowserWindow({
-    width: 350, 
+    width: 350,
     height: 500,
     //frame: false
   })
@@ -14,11 +14,11 @@ app.on('ready', function () {
 
   var agentWindow = new BrowserWindow({
     width: 900,
-    height: 450,
+    height: 500,
     show: false,
     //frame: false
   })
-  agentWindow.loadURL('file://' + __dirname + '/view/tab.html')
+  agentWindow.loadURL('file://' + __dirname + '/view/role_agent.html')
   agentWindow.setResizable(false)
 
   var serviceWindow = new BrowserWindow({
@@ -29,24 +29,54 @@ app.on('ready', function () {
   })
   serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html')
 
+  var detailsWindow = new BrowserWindow({
+    width: 900,
+    height: 600,
+    show: false,
+    //frame: false
+  })
+  detailsWindow.loadURL('file://' + __dirname + '/dashboard/modal.html')
+
   ipcMain.on('agent', function () {
-     console.log('test');
+    console.log('test');
     if (agentWindow.isVisible())
       agentWindow.hide()
-     
+
     else
       agentWindow.show()
       mainWindow.hide()
+  })
+
+  ipcMain.on('modal', function () {
+    console.log('test');
+    if (detailsWindow.isVisible())
+      detailsWindow.hide()
+
+    else
+      detailsWindow.show()
+    mainWindow.hide()
   })
 
   ipcMain.on('service', function () {
 
     if (serviceWindow.isVisible())
       serviceWindow.hide()
-     
+
     else
       serviceWindow.show()
       mainWindow.hide()
+  })
+
+  ipcMain.on('login', function () {
+    if (serviceWindow.isVisible()) {
+      serviceWindow.hide();
+    }
+
+    if (agentWindow.isVisible()) {
+      agentWindow.hide();
+    }
+
+    mainWindow.show();
   })
 
 })
