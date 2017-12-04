@@ -28,7 +28,7 @@ app.on('ready', function () {
     height: 800,
     show: false,
     resizable: false,
-    //frame: false
+    frame: false
   })
   serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html')
 

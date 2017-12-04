@@ -6,7 +6,7 @@ const {ipcRenderer, shell} = require('electron');
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 
-const url = "https://1ccfe188.ngrok.io";
+const url = "https://8a940d10.ngrok.io";
 
 $(document).ready(function() {
   function initializeTabs() {
