@@ -87,11 +87,11 @@ $(document).ready(function() {
   let number = _.get(ticket, 'number', '');
   let createdBy = _.get(ticket, 'createdBy', '');
   let createdOn = _.get(ticket, 'createdOn', '');
-  let description = _.get(ticket, 'description', '');
+  let shortDescription = _.get(ticket, 'shortDescription', '');
 
   $('#incident-number').html(number);
   $('#incident-header').html('Created by: ' + createdBy + ' on ' + createdOn);
-  $('#incident-summary-content').html(description);
+  $('#incident-summary-content').html(shortDescription);
 
   getTicket(number);
   initializeTabs();
