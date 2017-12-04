@@ -212,11 +212,13 @@ $(document).ready(function() {
   function toggleSubmitButton() {
     if ($('#submit_report_btn').is(':hidden')) {
       $('#submit_loader').hide();
+      $('#submit_loader_message').hide();
       $('#submit_report_btn').show();
     }
     else {
       $('#submit_report_btn').hide();
       $('#submit_loader').show();
+      $('#submit_loader_message').show();
     }
   }
 
@@ -230,6 +232,8 @@ $(document).ready(function() {
 
     var tasks = {
       getProcesses: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         ps.get(function(err, processes) {
           let sorted = _.sortBy(processes, 'cpu');
           let topProcesses = sorted.reverse().splice(0, processesCount);
@@ -239,6 +243,8 @@ $(document).ready(function() {
       },
 
       getMachine: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.system(function(data) {
           console.log(data);
           return next(null, data);
@@ -246,48 +252,64 @@ $(document).ready(function() {
       },
 
       getCpu: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.cpu(function(data) {
           return next(null, data);
         });
       },
 
       getCpuSpeed: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.cpuCurrentspeed(function(data) {
           return next(null, data);
         })
       },
 
       getMemory: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.mem(function(data) {
           return next(null, data);
         });
       },
 
       getBattery: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.battery(function(data) {
           return next(null, data);
         });
       },
 
       getBaseboard: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.baseboard(function(data) {
           return next(null, data);
         });
       },
 
       getNetworkInterfaces: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.networkInterfaces(function(data) {
           return next(null, data);
         });
       },
 
       getOSInfo: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.osInfo(function(data) {
           return next(null, data);
         });
       },
 
       getUsers: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.users(function(data) {
           return next(null, data);
         });
@@ -296,6 +318,8 @@ $(document).ready(function() {
     };
 
     async.auto(tasks, function(err, results) {
+      $('#submit_loader_message').html('Creating ServiceNow ticket...');
+
       let sysinfo = {
         processes: results.getProcesses,
         machine: results.getMachine,
@@ -332,7 +356,6 @@ $(document).ready(function() {
         },
         data: JSON.stringify(data),
         success: function(result, textStatus, jqXHR) {
-          /* TODO: insert to top of userTickets list*/
           let ticketItem = formatTicket(result);
           userTickets.unshift(ticketItem);
           performSearch('');
