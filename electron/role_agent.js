@@ -66,8 +66,15 @@ $(document).ready(function() {
   }
 
   function formatTicket(ticket) {
+    let shortDescription = _.get(ticket, "short_description", "<i>No short description</i>");
+    let shortDescriptionParts = shortDescription.split(' ');
+    let excerpt = shortDescriptionParts.splice(0, 4).join(' ');
+    if (shortDescriptionParts.length > 4) {
+      excerpt += "...";
+    }
+
     let ticketHeadingContent = '<strong>'
-      + _.get(ticket, "short_description", "<i>No short description</i>")
+      + excerpt
       + '<span class="badge float-right">'
       + _.get(ticketStateNames, ticket.state, "")
       + '</span>'
@@ -385,7 +392,7 @@ $(document).ready(function() {
     ipcRenderer.send('login');
   });
 
-  $('#firstname').html(firstname + '!');
+  $('#firstname').html(firstname);
   getTickets();
 });
 
