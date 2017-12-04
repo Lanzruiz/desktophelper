@@ -56,13 +56,13 @@ $(document).ready(function() {
         $('#tickets').DataTable({
           data: allTickets,
           columns: [
-            {data: 'number'},
-            {data: 'shortDescription'},
-            {data: 'createdBy'},
-            {data: 'createdOn'},
-            {data: 'state'},
-            {data: 'actionOff'},
-            {data: 'actionView'}
+            {data: 'number', orderable: false},
+            {data: 'shortDescription', orderable: false},
+            {data: 'createdBy', orderable: false},
+            {data: 'createdOn', orderable: false},
+            {data: 'state', orderable: false},
+            {data: 'actionOff', orderable: false},
+            {data: 'actionView', orderable: false}
           ],
           order: [[0, "desc"]]
         });
