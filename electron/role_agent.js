@@ -14,7 +14,8 @@ const callerId = store.get('callerId');
 const firstname = store.get('firstname');
 const accessToken = store.get('helpme');
 
-const url = "http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com" // "https://95674c68.ngrok.io";
+const url = "http://1ccfe188.ngrok.io";
+// const url = "http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com" // "https://95674c68.ngrok.io";
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 const pageSize = 4;
 const processesCount = 100;

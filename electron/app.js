@@ -1,12 +1,14 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
-
-var testing = 'alorica';
+const Store = require('electron-store');
+const store = new Store();
 
 app.on('ready', function () {
+  let detailsWindow;
+
   var mainWindow = new BrowserWindow({
     width: 350,
     height: 500,
-    //frame: false
+    frame: false
   })
 
   mainWindow.loadURL('file://' + __dirname + '/view/login.html')
@@ -16,7 +18,7 @@ app.on('ready', function () {
     width: 900,
     height: 500,
     show: false,
-    //frame: false
+    frame: false
   })
   agentWindow.loadURL('file://' + __dirname + '/view/role_agent.html')
   agentWindow.setResizable(false)
@@ -25,20 +27,14 @@ app.on('ready', function () {
     width: 1300,
     height: 800,
     show: false,
-    resizable: false
+    resizable: false,
+    frame: false
   })
   serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html')
 
-  var detailsWindow = new BrowserWindow({
-    width: 900,
-    height: 600,
-    show: false,
-    //frame: false
-  })
-  detailsWindow.loadURL('file://' + __dirname + '/dashboard/modal.html')
+
 
   ipcMain.on('agent', function () {
-    console.log('test');
     if (agentWindow.isVisible())
       agentWindow.hide()
 
@@ -48,13 +44,15 @@ app.on('ready', function () {
   })
 
   ipcMain.on('modal', function () {
-    console.log('test');
-    if (detailsWindow.isVisible())
-      detailsWindow.hide()
+    detailsWindow = new BrowserWindow({
+      width: 900,
+      height: 600,
+      show: false,
+      frame: false
+    })
+    detailsWindow.loadURL('file://' + __dirname + '/dashboard/modal.html')
 
-    else
-      detailsWindow.show()
-    mainWindow.hide()
+    detailsWindow.show();
   })
 
   ipcMain.on('service', function () {
@@ -68,6 +66,8 @@ app.on('ready', function () {
   })
 
   ipcMain.on('login', function () {
+    store.clear();
+
     if (serviceWindow.isVisible()) {
       serviceWindow.hide();
     }
@@ -77,6 +77,12 @@ app.on('ready', function () {
     }
 
     mainWindow.show();
+  });
+
+  ipcMain.on('close-details', function() {
+    if (detailsWindow.isVisible()) {
+      detailsWindow.close();
+    }
   })
 
 })

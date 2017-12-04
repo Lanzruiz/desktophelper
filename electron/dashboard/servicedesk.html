@@ -22,10 +22,14 @@
 
     <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="assets/css/demo.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet"/>
 <script>window.$ = window.jQuery = require('jquery');</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" ></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
     <style type="text/css">
         .header-up {
             background: #003a63;
@@ -237,242 +241,101 @@ h1 {
     </style>
 </head>
 <body>
-<div id="Popup">
-</div>
-<div class="header-up">
-     <img class="aloricalogo" src="../view/img/Alorica_Logo_White_Orange.png">
-     <div style="position: absolute; left: 1152px; top: 32px;">
-           <i class="fa fa-minus" style="margin-left: 30px; color: #FFF" aria-hidden="true"></i>
-          <i class="fa fa-power-off" onclick="logout()" style="margin-left: 30px; margin-top: -30px; color: #FFF" aria-hidden="true"></i>
-     </div>
-       <label for="modal__trigger">Launch Modal</label>
-</div>
+    <div id="Popup">
+    </div>
 
-<div class="wrapper">
-	<div class="sidebar" data-background-color="white" data-active-color="danger">
+    <div class="header-up">
+         <img class="aloricalogo" src="../view/img/Alorica_Logo_White_Orange.png">
+         <div style="position: absolute; left: 1152px; top: 32px;">
+               <i class="fa fa-minus" style="margin-left: 30px; color: #FFF" aria-hidden="true"></i>
+              <i class="fa fa-power-off" onclick="logout()" style="margin-left: 30px; margin-top: -30px; color: #FFF" aria-hidden="true"></i>
+         </div>
+        <label for="modal__trigger">Launch Modal</label>
+    </div>
 
-    <!--
-		Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"
-		Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
-	-->
+    <div class="wrapper">
+        <div class="sidebar" data-background-color="white" data-active-color="danger">
 
-    	<div class="sidebar-wrapper">
-            <div class="logo">
-                <a class="simple-text">
-                    Help Me
-                </a>
-            </div>
+        <!--
+            Tip 1: you can change the color of the sidebar's background using: data-background-color="white | black"
+            Tip 2: you can change the color of the active button using the data-active-color="primary | info | success | warning | danger"
+        -->
 
-            <ul class="nav">
-                <li class="active">
-                    <a>
-                        <i class="ti-home"></i>
-                        <p>Home</p>
+            <div class="sidebar-wrapper">
+                <div class="logo">
+                    <a class="simple-text">
+                        Help Me
                     </a>
-                </li>
-            
-            </ul>
-    	</div>
-    </div>
-
-    <div class="main-panel">
-		<nav class="navbar navbar-default">
-            <div class="container-fluid">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar bar1"></span>
-                        <span class="icon-bar bar2"></span>
-                        <span class="icon-bar bar3"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">Home</a>
                 </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav navbar-right">
-                        
-						<li>
-                          
-                        </li>
-                    </ul>
 
-                </div>
+                <ul class="nav">
+                    <li class="active">
+                        <a>
+                            <i class="ti-home"></i>
+                            <p>Home</p>
+                        </a>
+                    </li>
+
+                </ul>
             </div>
-        </nav>
+        </div>
 
-
-        <div class="content">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="card">
-                           
-                            <div class="content table-responsive table-full-width">
-                                <table id="example" class="display" cellspacing="0" width="100%">
-                                    <thead>
-                                        <tr>
-                                            <th>Incident No.</th> 
-                                            <th>Issue</th>
-                                            <th>User</th>
-                                            <th>Time</th>
-                                            <th>Status</th>
-                                            <th></th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                 
-                                </table>
+        <div class="main-panel">
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar bar1"></span>
+                            <span class="icon-bar bar2"></span>
+                            <span class="icon-bar bar3"></span>
+                        </button>
+                        <a class="navbar-brand" href="#">Home</a>
                     </div>
+                    <div class="collapse navbar-collapse">
+                        <ul class="nav navbar-nav navbar-right">
 
+                            <li>
+
+                            </li>
+                        </ul>
+
+                    </div>
+                </div>
+            </nav>
+
+
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card">
+                               <div class="content table-responsive table-full-width">
+                                    <table id="tickets" class="display" cellspacing="0" width="100%">
+                                        <thead>
+                                            <tr>
+                                                <th>Incident No.</th>
+                                                <th>Issue</th>
+                                                <th>User</th>
+                                                <th>Time</th>
+                                                <th>Status</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+
         </div>
-
-
-
-
+    <!--End of Modal -->
     </div>
-</div>
-
-
-
-
-    <input id="modal__trigger" type="checkbox" />
-    <label for="modal__trigger">Launch Modal</label>
-    <div class="modal__overlay" role="dialog" aria-labelledby="modal__title" aria-describedby="modal_desc">
-        <div class="modal__wrap">
-            <label for="modal__trigger">&#10006;</label>
-            <h2 id="modal__title">This is your modal content</h2>
-            <p id="modal__desc">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed ac laoreet elit. Phasellus dignissim purus vitae urna cursus, quis congue ligula tristique. Ut nec blandit risus. Donec at orci ut justo venenatis viverra. Suspendisse in volutpat lacus. In enim est, dapibus eget ipsum sed, suscipit ultrices diam.</p>
-        </div>
-    </div>
-
-<!--End of Modal -->
-
 </body>
-    <script src="http://code.jquery.com/jquery-1.7.2.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/css/bootstrap-combined.min.css">
-   <script src="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.0.4/js/bootstrap.min.js"></script>
-    <link href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" rel="stylesheet"/>
-    <script src="https://code.jquery.com/jquery-1.12.4.js" type="text/javascript"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js" type="text/javascript"></script>
-    <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        const Store = require('electron-store');
-        const store = new Store();
-
-        const {ipcRenderer} = require('electron')
-
-        var url = "http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com";
-
-    
-       
-    
-
-        $.fn.dataTable.Api.register( 'column().data().sum()', function () {
-    return this.reduce( function (a, b) {
-        var x = parseFloat( a ) || 0;
-        var y = parseFloat( b ) || 0;
-        return x + y;
-    } );
-} );
- 
-/* Init the table and fire off a call to get the hidden nodes. */
-$(document).ready(function() {
-   
-    $("#action").on("click", function(){ $("#exampleModal").modal();});
-    $("body").on("click", "#example td", function () {
-
-        if($(this).text() == "service") {
-            
-            alert('service');
-
-
-            //https://aloricasand.service-now.com/incident.do?sys_id
-                   
-        }
-
-        else if($(this).text() == "db") {
-
-             // 'Getting' data-attributes using getAttribute
-             var plant = document.getElementById('action');
-             var fruitCount = plant.getAttribute('data-id'); // fruitCount = '12'
-             //alert(fruitCount);
-
-              ipcRenderer.send('modal');
-        }
-    });
-
-
-         $.ajax({
-          type: "GET",
-          url: url + "/tickets",
-          headers: {
-            'Authorization': "Bearer " + store.get('helpme'),
-            'Content-Type': "application/json"
-          },
-          success: function(results) {
-
-            console.log(results);
-
-            var data = [];
-            results.forEach(function(result) {
-                data.push([
-                    result.number,
-                    result.short_description,
-                    result.sys_created_by,
-                    result.sys_created_on,
-                    result.state,
-                    "<td data-id='101' value='sample' id='action'><i class='fa fa-power-off' aria-hidden='true'><p style='font-size:0px'>service</p></i></td>",
-                    "<td><i class='fa fa-server' aria-hidden='true'><p style='font-size:0px' for='modal__trigger' id='action' data-id='"+result.number+"'>db</p></i></td>"
-
-                ]);
-            });
-
-            $('#example').DataTable({
-
-               data:data
-
-            });
-
-
-
-            /*var data = [];
-            results.forEach(function(result) {
-                data.push([
-                    result.number,
-                    result.short_description,
-                    result.sys_created_by,
-                    result.sys_created_on,
-                    result.state
-                ]);
-            });
-            */
-
-
-          }
-        });
-
-             
-    
-} );
-
-function test(event) {
-
-    alert(event);
-}
-
-function logout() {
-
-    
-
-    ipcRenderer.send('login');
-
-}
-
-
-
-
-    </script>
+<script src="./role_service.js"></script>
 
 	
 
