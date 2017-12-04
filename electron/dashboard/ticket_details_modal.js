@@ -4,9 +4,7 @@ const _ = require('lodash');
 const {ipcRenderer, shell} = require('electron');
 
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
-
-
-const url = "https://8a940d10.ngrok.io";
+const url = store.get('helpme_url');
 
 $(document).ready(function() {
   function initializeTabs() {

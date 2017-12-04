@@ -4,7 +4,7 @@ const store = new Store();
 const {ipcRenderer, shell} = require('electron')
 const _ = require('lodash');
 
-const url = "https://8a940d10.ngrok.io"; //http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com";
+const url = store.get('helpme_url');
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 let allTickets = [];

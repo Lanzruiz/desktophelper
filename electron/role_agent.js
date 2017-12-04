@@ -4,18 +4,17 @@ const si = require('systeminformation');
 const ps = require('current-processes');
 
 /**  U T I L I T I E S  **/
+const Store = require('electron-store');
+const store = new Store();
 const _ = require('lodash');
 const async = require('async');
 const moment = require('moment');
-const Store = require('electron-store');
-const store = new Store();
 
 const callerId = store.get('callerId');
 const firstname = store.get('firstname');
 const accessToken = store.get('helpme');
 
-const url = "http://1ccfe188.ngrok.io";
-// const url = "http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com" // "https://95674c68.ngrok.io";
+const url = store.get('helpme_url');
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 const pageSize = 4;
 const processesCount = 100;
