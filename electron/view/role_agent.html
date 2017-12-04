@@ -154,6 +154,10 @@ strong.list-group-item-text {
     width: 34px;
   }
 
+  span#submit_loader_message {
+    display: none;
+  }
+
   a.list-group-item,
   a.page-link {
     cursor: pointer;
@@ -237,14 +241,15 @@ strong.list-group-item-text {
   <div class="container-fluid">
       <div class="row">
          <div class="col-sm-7 border-right">
-           <h3><strong>Good Day <span id="firstname"></span></strong> What can we help you with?</h3>
+           <h3><strong>Good Day <span id="firstname"></span>.</strong> What can we help you with?</h3>
              <form>
               <div class="form-group">
                 <textarea class="form-control" rows="5" id="description"></textarea>
-                <button id="submit_report_btn" type="button" class="btn btn-primary btn-block btn-warning margin-top-20px">SUBMIT</button>
+                <button id="submit_report_btn" type="button" class="btn btn-primary btn-block btn-warning margin-top-20px">Help Me!</button>
               </div>
             </form>
            <img id="submit_loader" src="../view/img/spinner.gif">
+           <span id="submit_loader_message">Test span</span>
          </div>
          <div class="col-sm-5">
             <h3 style="float: right;">Incidents</h3>

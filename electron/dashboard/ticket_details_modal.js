@@ -4,9 +4,7 @@ const _ = require('lodash');
 const {ipcRenderer, shell} = require('electron');
 
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
-
-
-const url = "https://8a940d10.ngrok.io";
+const url = store.get('helpme_url');
 
 $(document).ready(function() {
   function initializeTabs() {
@@ -89,11 +87,11 @@ $(document).ready(function() {
   let number = _.get(ticket, 'number', '');
   let createdBy = _.get(ticket, 'createdBy', '');
   let createdOn = _.get(ticket, 'createdOn', '');
-  let description = _.get(ticket, 'description', '');
+  let shortDescription = _.get(ticket, 'shortDescription', '');
 
   $('#incident-number').html(number);
   $('#incident-header').html('Created by: ' + createdBy + ' on ' + createdOn);
-  $('#incident-summary-content').html(description);
+  $('#incident-summary-content').html(shortDescription);
 
   getTicket(number);
   initializeTabs();

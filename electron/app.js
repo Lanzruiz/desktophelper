@@ -1,6 +1,10 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const Store = require('electron-store');
 const store = new Store();
+const config = require("./config");
+
+const url = config.api.host;
+store.set('helpme_url', url);
 
 app.on('ready', function () {
   let detailsWindow;
@@ -8,7 +12,7 @@ app.on('ready', function () {
   var mainWindow = new BrowserWindow({
     width: 350,
     height: 500,
-    frame: false
+    frame: config.browserWindows.frame
   })
 
   mainWindow.loadURL('file://' + __dirname + '/view/login.html')
@@ -18,7 +22,7 @@ app.on('ready', function () {
     width: 900,
     height: 500,
     show: false,
-    frame: false
+    frame: config.browserWindows.frame
   })
   agentWindow.loadURL('file://' + __dirname + '/view/role_agent.html')
   agentWindow.setResizable(false)
@@ -28,7 +32,7 @@ app.on('ready', function () {
     height: 800,
     show: false,
     resizable: false,
-    frame: false
+    frame: config.browserWindows.frame
   })
   serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html')
 
@@ -48,7 +52,7 @@ app.on('ready', function () {
       width: 900,
       height: 600,
       show: false,
-      frame: false
+      frame: config.browserWindows.frame
     })
     detailsWindow.loadURL('file://' + __dirname + '/dashboard/modal.html')
 

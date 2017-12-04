@@ -4,18 +4,17 @@ const si = require('systeminformation');
 const ps = require('current-processes');
 
 /**  U T I L I T I E S  **/
+const Store = require('electron-store');
+const store = new Store();
 const _ = require('lodash');
 const async = require('async');
 const moment = require('moment');
-const Store = require('electron-store');
-const store = new Store();
 
 const callerId = store.get('callerId');
 const firstname = store.get('firstname');
 const accessToken = store.get('helpme');
 
-const url = "http://1ccfe188.ngrok.io";
-// const url = "http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com" // "https://95674c68.ngrok.io";
+const url = store.get('helpme_url');
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 const pageSize = 4;
 const processesCount = 100;
@@ -67,8 +66,15 @@ $(document).ready(function() {
   }
 
   function formatTicket(ticket) {
+    let shortDescription = _.get(ticket, "short_description", "<i>No short description</i>");
+    let shortDescriptionParts = shortDescription.split(' ');
+    let excerpt = shortDescriptionParts.splice(0, 4).join(' ');
+    if (shortDescriptionParts.length > 4) {
+      excerpt += "...";
+    }
+
     let ticketHeadingContent = '<strong>'
-      + _.get(ticket, "short_description", "<i>No short description</i>")
+      + excerpt
       + '<span class="badge float-right">'
       + _.get(ticketStateNames, ticket.state, "")
       + '</span>'
@@ -206,11 +212,13 @@ $(document).ready(function() {
   function toggleSubmitButton() {
     if ($('#submit_report_btn').is(':hidden')) {
       $('#submit_loader').hide();
+      $('#submit_loader_message').hide();
       $('#submit_report_btn').show();
     }
     else {
       $('#submit_report_btn').hide();
       $('#submit_loader').show();
+      $('#submit_loader_message').show();
     }
   }
 
@@ -224,6 +232,8 @@ $(document).ready(function() {
 
     var tasks = {
       getProcesses: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         ps.get(function(err, processes) {
           let sorted = _.sortBy(processes, 'cpu');
           let topProcesses = sorted.reverse().splice(0, processesCount);
@@ -233,6 +243,8 @@ $(document).ready(function() {
       },
 
       getMachine: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.system(function(data) {
           console.log(data);
           return next(null, data);
@@ -240,48 +252,64 @@ $(document).ready(function() {
       },
 
       getCpu: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.cpu(function(data) {
           return next(null, data);
         });
       },
 
       getCpuSpeed: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.cpuCurrentspeed(function(data) {
           return next(null, data);
         })
       },
 
       getMemory: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.mem(function(data) {
           return next(null, data);
         });
       },
 
       getBattery: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.battery(function(data) {
           return next(null, data);
         });
       },
 
       getBaseboard: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.baseboard(function(data) {
           return next(null, data);
         });
       },
 
       getNetworkInterfaces: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.networkInterfaces(function(data) {
           return next(null, data);
         });
       },
 
       getOSInfo: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.osInfo(function(data) {
           return next(null, data);
         });
       },
 
       getUsers: function(next) {
+        $('#submit_loader_message').html('Extracting system  information...');
+
         si.users(function(data) {
           return next(null, data);
         });
@@ -290,6 +318,8 @@ $(document).ready(function() {
     };
 
     async.auto(tasks, function(err, results) {
+      $('#submit_loader_message').html('Creating ServiceNow ticket...');
+
       let sysinfo = {
         processes: results.getProcesses,
         machine: results.getMachine,
@@ -326,7 +356,6 @@ $(document).ready(function() {
         },
         data: JSON.stringify(data),
         success: function(result, textStatus, jqXHR) {
-          /* TODO: insert to top of userTickets list*/
           let ticketItem = formatTicket(result);
           userTickets.unshift(ticketItem);
           performSearch('');
@@ -386,7 +415,7 @@ $(document).ready(function() {
     ipcRenderer.send('login');
   });
 
-  $('#firstname').html(firstname + '!');
+  $('#firstname').html(firstname);
   getTickets();
 });
 

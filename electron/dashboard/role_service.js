@@ -4,7 +4,7 @@ const store = new Store();
 const {ipcRenderer, shell} = require('electron')
 const _ = require('lodash');
 
-const url = "https://8a940d10.ngrok.io"; //http://ec2-52-65-73-16.ap-southeast-2.compute.amazonaws.com";
+const url = store.get('helpme_url');
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 let allTickets = [];
@@ -61,13 +61,13 @@ $(document).ready(function() {
         $('#tickets').DataTable({
           data: allTickets,
           columns: [
-            {data: 'number'},
-            {data: 'shortDescription'},
-            {data: 'createdBy'},
-            {data: 'createdOn'},
-            {data: 'state'},
-            {data: 'actionOff'},
-            {data: 'actionView'}
+            {data: 'number', orderable: false},
+            {data: 'shortDescription', orderable: false},
+            {data: 'createdBy', orderable: false},
+            {data: 'createdOn', orderable: false},
+            {data: 'state', orderable: false},
+            {data: 'actionOff', orderable: false},
+            {data: 'actionView', orderable: false}
           ],
           order: [[0, "desc"]]
         });
