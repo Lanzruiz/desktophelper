@@ -1,12 +1,12 @@
 {
-  "name": "create-multi-window-electron-app",
+  "name": "Help Me",
   "version": "0.1.0",
   "description": "",
   "main": "app.js",
   "scripts": {
     "start": "electron ."
   },
-  "author": "Kyle Robinson Young <kyle@dontkry.com> (http://dontkry.com)",
+  "author": "Alorica GBS",
   "license": "MIT",
   "devDependencies": {
     "electron-prebuilt": "^0.28.3"
