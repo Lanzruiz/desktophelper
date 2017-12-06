@@ -1,7 +1,10 @@
+const env = require("./env");
+
 let config = {
 
   api: {
-    host: "https://bf381544.ngrok.io"
+    host: env.api.host,
+    secret: env.api.secret
   },
 
   browserWindows: {
