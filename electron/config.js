@@ -1,11 +1,11 @@
 let config = {
 
   api: {
-    host: "https://8a940d10.ngrok.io"
+    host: "https://bf381544.ngrok.io"
   },
 
   browserWindows: {
-    frame: false
+    frame: true
   }
 
 };

@@ -8,6 +8,8 @@ store.set('helpme_url', url);
 
 app.on('ready', function () {
   let detailsWindow;
+  let serviceWindow;
+  let agentWindow;
 
   var mainWindow = new BrowserWindow({
     width: 350,
@@ -18,33 +20,18 @@ app.on('ready', function () {
   mainWindow.loadURL('file://' + __dirname + '/view/login.html')
   mainWindow.setResizable(false)
 
-  var agentWindow = new BrowserWindow({
-    width: 900,
-    height: 500,
-    show: false,
-    frame: config.browserWindows.frame
-  })
-  agentWindow.loadURL('file://' + __dirname + '/view/role_agent.html')
-  agentWindow.setResizable(false)
-
-  var serviceWindow = new BrowserWindow({
-    width: 1300,
-    height: 800,
-    show: false,
-    resizable: false,
-    frame: config.browserWindows.frame
-  })
-  serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html')
-
-
-
   ipcMain.on('agent', function () {
-    if (agentWindow.isVisible())
-      agentWindow.hide()
+   
+    agentWindow = new BrowserWindow({
+      width: 900,
+      height: 500,
+      show: false,
+      frame: config.browserWindows.frame
+    })
+    agentWindow.loadURL('file://' + __dirname + '/view/role_agent.html')
+    agentWindow.setResizable(false)
 
-    else
-      agentWindow.show()
-      mainWindow.hide()
+    agentWindow.show();
   })
 
   ipcMain.on('modal', function () {
@@ -61,23 +48,28 @@ app.on('ready', function () {
 
   ipcMain.on('service', function () {
 
-    if (serviceWindow.isVisible())
-      serviceWindow.hide()
+  serviceWindow = new BrowserWindow({
+    width: 1300,
+    height: 800,
+    show: false,
+    resizable: false,
+    frame: config.browserWindows.frame
+  })
+  serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html')
 
-    else
-      serviceWindow.show()
-      mainWindow.hide()
+    serviceWindow.show()
+    mainWindow.hide()
   })
 
   ipcMain.on('login', function () {
     store.clear();
-
-    if (serviceWindow.isVisible()) {
-      serviceWindow.hide();
+    store.set('helpme_url', url);
+    if (serviceWindow) {
+      serviceWindow.close();
     }
 
-    if (agentWindow.isVisible()) {
-      agentWindow.hide();
+    if (agentWindow) {
+      agentWindow.close();
     }
 
     mainWindow.show();

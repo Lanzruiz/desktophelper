@@ -20,7 +20,11 @@ $.fn.dataTable.Api.register( 'column().data().sum()', function () {
 
 $(document).ready(function() {
 
+  console.log('service window launch');
   function getTickets() {
+    console.log('get tickets');
+    console.log('helpme session', store.get('helpme'));
+    console.log(url);
     $.ajax({
       type: "GET",
       url: url + "/tickets",
@@ -30,7 +34,7 @@ $(document).ready(function() {
       },
       success: function(results) {
 
-
+  
         document.getElementById("tickets").style.display = "block";
 
          document.getElementById("loader").style.display = "none";
