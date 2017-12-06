@@ -5,6 +5,7 @@ const config = require("./config");
 
 const url = config.api.host;
 store.set('helpme_url', url);
+store.set('platform', process.platform);
 
 app.on('ready', function () {
   let detailsWindow;
