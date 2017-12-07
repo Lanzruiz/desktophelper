@@ -1,6 +1,7 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
 const Store = require('electron-store');
 const store = new Store();
+const localShortcut = require('electron-localshortcut');
 const config = require("./config");
 
 const {host, secret} = config.api;
@@ -49,6 +50,16 @@ app.on('ready', function () {
     })
     detailsWindow.loadURL('file://' + __dirname + '/dashboard/modal.html');
     detailsWindow.show();
+    /*
+    detailsWindow.webContents.on('found-in-page', (event, result) => {
+      if (result.finalUpdate) {
+        detailsWindow.webContents.stopFindInPage('keepSelection');
+      }
+    });
+    */
+    localShortcut.register(detailsWindow, 'Ctrl+F', () => {
+      detailsWindow.webContents.send('toggle-search');
+    });
   });
 
   ipcMain.on('service', function () {
@@ -87,7 +98,12 @@ app.on('ready', function () {
   ipcMain.on('close-details', function() {
     if (detailsWindow.isVisible()) {
       detailsWindow.close();
+      detailsWindow = null;
     }
+  });
+
+  ipcMain.on('search-in-details', (event, arg) => {
+    detailsWindow.webContents.findInPage(arg);
   });
 
 });

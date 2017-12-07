@@ -68,6 +68,10 @@ $(document).ready(function() {
     });
   }
 
+  function performSearch(searchValue) {
+    ipcRenderer.send('search-in-details', searchValue);
+  }
+
   $('#close').click(function(e) {
     ipcRenderer.send('close-details');
   });
@@ -91,4 +95,23 @@ $(document).ready(function() {
 
   getTicket(number);
   initializeTabs();
+
+  $('#ticket-search').keypress(function(e) {
+    let key = e.which;
+    if (key == 13) {
+      performSearch(_.trim($('#ticket-search').val()));
+      $('#ticket-search').focus();
+    }
+  });
+
+  ipcRenderer.on('toggle-search', (event, arg) => {
+    let searchElement = $('#ticket-search-container');
+    if (searchElement.is(':visible')) {
+      searchElement.hide();
+    }
+    else {
+      searchElement.show();
+      $('#ticket-search').focus();
+    }
+  });
 });

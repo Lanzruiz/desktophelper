@@ -18,12 +18,21 @@
       margin-right: 20px;
       cursor: pointer;
     }
+
+    div#ticket-search-container {
+      display: none;
+    }
   </style>
 </head>
 <body>
 
 <div class="container">
   <h2 id="incident-number">Dynamic Tabs</h2>
+  <div id="ticket-search-container">
+    <label for="ticket-search">Search</label>
+    <input type="text" id="ticket-search" />
+  </div>
+
   <a id="close">Close</a>
   <a id="servicnow">Service Now</a>
   <ul class="nav nav-tabs">
@@ -43,7 +52,6 @@
     <div id="menu2" class="tab-pane fade">
       <p id="incident-running-processes">Please wait...</p>
     </div>
-    
   </div>
 </div>
 
