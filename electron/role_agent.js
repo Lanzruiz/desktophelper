@@ -10,11 +10,13 @@ const _ = require('lodash');
 const async = require('async');
 const moment = require('moment');
 
-const callerId = store.get('callerId');
 const firstname = store.get('firstname');
 const accessToken = store.get('helpme');
+console.log("storeFirstName: ", firstname);
+console.log("accessToken: ", accessToken);
 
 const url = store.get('helpme_url');
+const platform = store.get('platform');
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 const pageSize = 4;
 const processesCount = 100;
@@ -160,7 +162,7 @@ $(document).ready(function() {
 
           taskFormatTickets: function(next) {
             console.log("formatTickets task");
-            formatTickets(result, next);
+            formatTickets(_.get(result, "data", []), next);
             currentTicketsList = userTickets;
             console.log("tickets: ", userTickets);
           },
@@ -229,11 +231,66 @@ $(document).ready(function() {
 
   function submitReport(event) {
     // let results = await Promise.all([getProcesses]);
+    /*
+    si.getAllData(null, '', function(data) {
+      console.log("data: ", data);
+      return;
+    });
+    */
 
-    var tasks = {
+    let tasks = {
+      /** G E N E R A L **/
+      getGeneral: function(next) {
+        let subtasks = {
+          getTime: function(next) {
+            return next(null, si.time());
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let generalInfo = {
+            time: results.getTime
+          };
+
+          return next(null, generalInfo);
+        });
+      },
+
+      /** S Y S T E M **/
+      getSystem: function(next) {
+        let subtasks = {
+          system: function(next) {
+            si.system(function(data) {
+              return next(null, data);
+            });
+          },
+
+          getBios: function(next) {
+            si.bios(function(data) {
+              return next(null, data);
+            })
+          },
+
+          getBaseboard: function(next) {
+            si.baseboard(function(data) {
+              return next(null, data);
+            });
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let systemInfo = {
+            system: results.system,
+            bios: results.getBios,
+            baseboard: results.getBaseboard
+          };
+
+          return next(null, systemInfo);
+        });
+      },
+
+      /** P R O C E S S E S **/
       getProcesses: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
-
         ps.get(function(err, processes) {
           let sorted = _.sortBy(processes, 'cpu');
           let topProcesses = sorted.reverse().splice(0, processesCount);
@@ -242,96 +299,316 @@ $(document).ready(function() {
         });
       },
 
-      getMachine: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
-
-        si.system(function(data) {
-          console.log(data);
-          return next(null, data);
-        });
-      },
-
+      /** C P U **/
       getCpu: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
+        let subtasks = {
+          cpu: function(next) {
+            si.cpu(function(data) {
+              return next(null, data);
+            });
+          },
 
-        si.cpu(function(data) {
-          return next(null, data);
+          getCpuFlags: function(data) {
+            si.cpuFlags(function(data) {
+              return next(null, data);
+            })
+          },
+
+          getCpuCache: function(data) {
+            si.cpuCache(function(data) {
+              return next(null, data);
+            });
+          },
+
+          getCpuCurrentSpeed: function(next) {
+            si.cpuCurrentspeed(function(data) {
+              return next(null, data);
+            })
+          },
+
+          getCpuTemperature: function(next) {
+            si.cpuTemperature(function(data) {
+              return next(null, data);
+            });
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let cpuInfo = {
+            cpu: results.cpu,
+            cpuFlags: results.getCpuFlags,
+            cpuCache: results.getCpuCache,
+            cpuCurrentSpeed: results.getCpuCurrentSpeed,
+            cpuTemperature: results.getCpuTemperature
+          };
+
+          return next(null, cpuInfo);
         });
       },
 
-      getCpuSpeed: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
-
-        si.cpuCurrentspeed(function(data) {
-          return next(null, data);
-        })
-      },
-
+      /** M E M O R Y **/
       getMemory: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
+        let subtasks = {
+          memory: function(next) {
+            si.mem(function(data) {
+              return next(null, data);
+            });
+          },
 
-        si.mem(function(data) {
-          return next(null, data);
+          getMemoryLayout: function(next) {
+            si.mem(function(data) {
+              return next(null, data);
+            });
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let memoryInfo = {
+            memory: results.memory,
+            memoryLayout: results.getMemoryLayout
+          };
+
+          return next(null, memoryInfo);
         });
       },
 
+      /** D I S K **/
+      getDisk: function(next) {
+        let subtasks = {
+          getDiskLayout: function(next) {
+            si.diskLayout(function(data) {
+              return next(null, data);
+            });
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let diskInfo = {
+            diskLayout: results.getDiskLayout
+          };
+
+          return next(null, diskInfo);
+        });
+      },
+
+      /** B A T T E R Y **/
       getBattery: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
+        let subtasks = {
+          battery: function(next) {
+            si.battery(function(data) {
+              return next(null, data);
+            });
+          }
+        };
 
-        si.battery(function(data) {
-          return next(null, data);
+        async.auto(subtasks, function(err, results) {
+          let batteryInfo = {
+            battery: results.battery
+          };
+
+          return next(null, batteryInfo);
         });
       },
 
-      getBaseboard: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
+      /** G R A P H I C S **/
+      getGraphics: function(next) {
+        let subtasks = {
+          graphics: function(next) {
+            si.graphics(function(data) {
+              return next(null, data);
+            });
+          }
+        };
 
-        si.baseboard(function(data) {
-          return next(null, data);
+        async.auto(subtasks, function(err, results) {
+          let graphicsInfo = {
+            graphics: results.graphics
+          };
+
+          return next(null, graphicsInfo);
         });
       },
 
-      getNetworkInterfaces: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
+      /** O P E R A T I N G   S Y S T E M **/
+      getOS: function(next) {
+        let subtasks = {
+          OS: function(next) {
+            si.osInfo(function(data) {
+              return next(null, data);
+            });
+          },
 
-        si.networkInterfaces(function(data) {
-          return next(null, data);
+          getVersions: function(next) {
+            si.versions(function(data) {
+              return next(null, data);
+            });
+          },
+
+          getShell: function(next) {
+            if (platform == "win32") {
+              return next(null, "Not Supported");
+            }
+
+            si.shell(function(data) {
+              return next(null, data);
+            });
+          },
+
+          getUsers: function(next) {
+            si.users(function(data) {
+              return next(null, data);
+            });
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let osInfo = {
+            os: results.OS,
+            versions: results.getVersions,
+            shell: results.getShell,
+            users: results.getUsers
+          };
+
+          return next(null, osInfo);
         });
       },
 
-      getOSInfo: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
+      /** F I L E   S Y S T E M **/
+      getFileSystem: function(next) {
+        let subtasks = {
+          getFsSize: function(next) {
+            si.fsSize(function(data) {
+              return next(null, data);
+            });
+          },
 
-        si.osInfo(function(data) {
-          return next(null, data);
+          getBlockDevices: function(next) {
+            si.blockDevices(function(data) {
+              return next(null, data);
+            });
+          },
+
+          getFsStats: function(next) {
+            if (platform == "win32") {
+              return next(null, "Not Supported");
+            }
+
+            si.fsStats(function(data) {
+              return next(null, data);
+            });
+          },
+
+          getDisksIO: function(next) {
+            if (platform == "win32") {
+              return next(null, "Not Supported");
+            }
+
+            si.disksIO(function(data) {
+              return next(null, data);
+            });
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let fileSystemInfo = {
+            fsSize: results.getFsSize,
+            blockDevices: results.getBlockDevices,
+            fsStats: results.getFsStats,
+            disksIO: results.getDisksIO
+          };
+
+          return next(null, fileSystemInfo);
         });
       },
 
-      getUsers: function(next) {
-        $('#submit_loader_message').html('Extracting system  information...');
+      /** N E T W O R K **/
+      getNetwork: function(next) {
+        let subtasks = {
+          getNetworkInterfaces: function(next) {
+            si.networkInterfaces(function(data) {
+              return next(null, data);
+            });
+          },
 
-        si.users(function(data) {
-          return next(null, data);
+          getNetworkInterfaceDefault: function(next) {
+            si.networkInterfaceDefault(function(data) {
+              return next(null, data);
+            });
+          },
+
+          getNetworkStats: function(next) {
+            si.networkStats(function(data) {
+              return next(null, data);
+            });
+          },
+
+          getNetworkConnections: function(next) {
+            si.networkConnections(function(data) {
+              return next(null, data);
+            });
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let networkInfo = {
+            networkInterface: results.getNetworkInterfaces,
+            networkInterfaceDefault: results.getNetworkInterfaceDefault,
+            networkStats: results.getNetworkStats,
+            networkConnections: results.getNetworkConnections
+          };
+
+          return next(null, networkInfo);
+        });
+      },
+
+      /** C U R R E N T   L O A D **/
+      getCurrentLoad: function(next) {
+        let subtasks = {
+          currentLoad: function(next) {
+            si.currentLoad(function(data){
+              return next(null, data);
+            });
+          },
+
+          fullLoad: function(next) {
+            si.fullLoad(function(data) {
+              return next(null, data);
+            });
+          }
+        };
+
+        async.auto(subtasks, function(err, results) {
+          let load = {
+            currentLoad: results.currentLoad,
+            fullLoad: results.fullLoad
+          };
+
+          return next(null, load);
         });
       }
-
     };
 
+    $('#submit_loader_message').html('Extracting system  information...');
     async.auto(tasks, function(err, results) {
       $('#submit_loader_message').html('Creating ServiceNow ticket...');
 
       let sysinfo = {
+        general: results.getGeneral,
+        system: results.getSystem,
         processes: results.getProcesses,
-        machine: results.getMachine,
         cpu: results.getCpu,
-        cpuSpeed: results.getCpuSpeed,
         memory: results.getMemory,
+        disk: results.getDisk,
         battery: results.getBattery,
-        baseboard: results.getBaseboard,
-        networkInterfaces: results.getNetworkInterfaces,
-        osInfo: results.getOSInfo,
-        users: results.getUsers
+        graphics: results.getGraphics,
+        os: results.getOS,
+        fileSystem: results.getFileSystem,
+        network: results.getNetwork,
+        currentLoad: results.getCurrentLoad
       };
+
+      console.log("results: ", results);
+      console.log("sysinfo: ", sysinfo);
 
       let description = $('#description').val();
       // let shortDescription = description.split(' ').slice(0, 5).join(' ') + '...';
@@ -345,6 +622,21 @@ $(document).ready(function() {
         sys_info: sysinfo,
         comments: moment()
       };
+
+      /*
+      let payload = JSON.parse(_.escape(JSON.stringify(data, function(k, v) {
+        if (v === undefined) {
+          return null;
+        }
+
+        return v;
+      })));
+
+      console.log("payload: ", payload);
+      */
+
+      console.log("data: ", data);
+      console.log("JSON.stringify(data): ", JSON.stringify(data));
 
       $.ajax({
         type: "POST",
