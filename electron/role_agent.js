@@ -693,7 +693,7 @@ $(document).ready(function() {
 
   $('#logout_btn').click(function(e) {
     store.clear();
-    ipcRenderer.send('login');
+    ipcRenderer.send('logout-agent');
   });
 
   $('#firstname').html(firstname);

@@ -5,6 +5,7 @@ const {ipcRenderer, shell} = require('electron');
 
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 const url = store.get('helpme_url');
+const accessToken = store.get('helpme');
 
 $(document).ready(function() {
   function initializeTabs() {
@@ -13,8 +14,10 @@ $(document).ready(function() {
     });
   }
 
-  function jsonToHTML(obj, name) {
+  function jsonToHTML(obj, name, level) {
     var li = document.createElement("li");
+
+
     if (typeof(name) != "undefined") {
       var strong = document.createElement("strong");
       strong.appendChild(document.createTextNode(name + ": "));
@@ -34,24 +37,26 @@ $(document).ready(function() {
 
   function getTicket(ticketNumber) {
     $.ajax({
-      url: url + '/ticket/' + ticketNumber,
+      url: url + '/tickets/' + ticketNumber,
       type: "GET",
       headers: {
-        'Authorization': "Bearer " + store.get('helpme'),
+        'Authorization': "Bearer " + accessToken,
         'Content-Type': "application/json"
       },
       success: function(result) {
-        let {processes, machine, cpu, cpuSpeed, memory, battery, baseboard, networkInterfaces, osInfo, users} = result;
+        let {general, system, processes, cpu, memory, disk, battery, graphics, fileSystem, network, currentLoad} = result;
+
         let systemInformation = {
-          machine: machine,
+          general: general,
+          system: system,
           cpu: cpu,
-          cpuSpeed: cpuSpeed,
           memory: memory,
+          disk: disk,
           battery: battery,
-          baseboard: baseboard,
-          networkInterfaces: networkInterfaces,
-          osInfo: osInfo,
-          users: users
+          graphics: graphics,
+          fileSystem: fileSystem,
+          network: network,
+          currentLoad: currentLoad
         };
 
         let systemInformationContent = jsonToHTML(systemInformation);
@@ -63,16 +68,7 @@ $(document).ready(function() {
     });
   }
 
-  function reset() {
-    $('#incident-number').html('');
-    $('#incident-header').html('');
-    $('#incident-summary-content').html('');
-    $('#incident-system-information').html('');
-    $('#incident-running-processes').html('');
-  }
-
   $('#close').click(function(e) {
-    // reset();
     ipcRenderer.send('close-details');
   });
 
