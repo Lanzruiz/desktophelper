@@ -5,43 +5,34 @@ const {ipcRenderer, shell} = require('electron')
 const _ = require('lodash');
 
 const url = store.get('helpme_url');
+const accessToken = store.get('helpme');
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 let allTickets = [];
 
-
-$.fn.dataTable.Api.register( 'column().data().sum()', function () {
-  return this.reduce( function (a, b) {
-    var x = parseFloat( a ) || 0;
-    var y = parseFloat( b ) || 0;
-    return x + y;
-  } );
-} );
+// $.fn.dataTable.Api.register( 'column().data().sum()', function () {
+//   return this.reduce( function (a, b) {
+//     var x = parseFloat( a ) || 0;
+//     var y = parseFloat( b ) || 0;
+//     return x + y;
+//   } );
+// } );
 
 $(document).ready(function() {
-
-  console.log('service window launch');
   function getTickets() {
-    console.log('get tickets');
-    console.log('helpme session', store.get('helpme'));
-    console.log(url);
     $.ajax({
       type: "GET",
       url: url + "/tickets",
       headers: {
-        'Authorization': "Bearer " + store.get('helpme'),
+        'Authorization': "Bearer " + accessToken,
         'Content-Type': "application/json"
       },
       success: function(results) {
-
-  
         document.getElementById("tickets").style.display = "block";
-
-         document.getElementById("loader").style.display = "none";
+        document.getElementById("loader").style.display = "none";
 
         console.log(results);
-
-        let tickets = results;
+        let tickets = _.get(results, "data", []);
         console.log('tickets: ', tickets);
 
         _.forEach(tickets, function(ticket) {
@@ -102,7 +93,5 @@ $(document).ready(function() {
 } );
 
 function logout() {
-
-  ipcRenderer.send('login');
-
+  ipcRenderer.send('logout-service');
 }
