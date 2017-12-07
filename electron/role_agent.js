@@ -123,16 +123,21 @@ $(document).ready(function() {
       userTickets.push(ticketItem);
     });
 
+    currentTicketsList = userTickets;
     return callback();
   }
 
-  function showTickets(from, count) {
+  function showTickets(from, count, callback) {
     console.log('from: ', from);
     console.log('count: ', count);
     let ticketsCopy = _.clone(currentTicketsList);
     let displayTickets = ticketsCopy.splice(from, count);
     console.log("@showTickets displayTickets: ", displayTickets);
     $('#list_group').html(_.map(displayTickets, "htmlContent"));
+
+    if (callback) {
+      return callback();
+    }
   }
 
   function getTickets() {
@@ -142,14 +147,22 @@ $(document).ready(function() {
       type: "GET",
       url: url+"/tickets",
       headers: {
-        'Authorization': "Bearer "+accessToken,
+        'Authorization': "Bearer " + accessToken,
         'Content-Type': "application/json"
       },
       success: function(result, textStatus, jqXHR) {
         console.log(result);
 
         let tasks = {
-          taskShowPagination: function(next) {
+          taskFormatTickets: function(next) {
+            formatTickets(_.get(result, "data", []), next);
+          },
+
+          taskShowTickets: ["taskFormatTickets", function(results, next) {
+            showTickets(0, pageSize, next);
+          }],
+
+          taskShowPagination: ["taskShowTickets", function(results, next) {
             let count = _.get(result, "meta.total", 0);
             console.log("ticketCount: " + count);
 
@@ -158,19 +171,7 @@ $(document).ready(function() {
             }
 
             return next();
-          },
-
-          taskFormatTickets: function(next) {
-            console.log("formatTickets task");
-            formatTickets(_.get(result, "data", []), next);
-            currentTicketsList = userTickets;
-            console.log("tickets: ", userTickets);
-          },
-
-          taskShowTickets: ["taskShowPagination", "taskFormatTickets", function(next, results) {
-            showTickets(0, pageSize);
-            return next();
-          }]
+          }],
         };
 
 
@@ -308,13 +309,13 @@ $(document).ready(function() {
             });
           },
 
-          getCpuFlags: function(data) {
+          getCpuFlags: function(next) {
             si.cpuFlags(function(data) {
               return next(null, data);
             })
           },
 
-          getCpuCache: function(data) {
+          getCpuCache: function(next) {
             si.cpuCache(function(data) {
               return next(null, data);
             });
@@ -432,7 +433,7 @@ $(document).ready(function() {
       /** O P E R A T I N G   S Y S T E M **/
       getOS: function(next) {
         let subtasks = {
-          OS: function(next) {
+          getOperatingSystem: function(next) {
             si.osInfo(function(data) {
               return next(null, data);
             });
@@ -463,7 +464,7 @@ $(document).ready(function() {
 
         async.auto(subtasks, function(err, results) {
           let osInfo = {
-            os: results.OS,
+            os: results.getOperatingSystem,
             versions: results.getVersions,
             shell: results.getShell,
             users: results.getUsers
@@ -623,18 +624,6 @@ $(document).ready(function() {
         comments: moment()
       };
 
-      /*
-      let payload = JSON.parse(_.escape(JSON.stringify(data, function(k, v) {
-        if (v === undefined) {
-          return null;
-        }
-
-        return v;
-      })));
-
-      console.log("payload: ", payload);
-      */
-
       console.log("data: ", data);
       console.log("JSON.stringify(data): ", JSON.stringify(data));
 
@@ -643,7 +632,7 @@ $(document).ready(function() {
         dataType: "json",
         url: url+"/tickets",
         headers: {
-          'Authorization': "Bearer "+accessToken,
+          'Authorization': "Bearer " + accessToken,
           'Content-Type': "application/json"
         },
         data: JSON.stringify(data),
