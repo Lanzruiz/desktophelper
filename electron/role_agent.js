@@ -150,7 +150,7 @@ $(document).ready(function() {
 
         let tasks = {
           taskShowPagination: function(next) {
-            let count = result.length;
+            let count = _.get(result, "meta.total", 0);
             console.log("ticketCount: " + count);
 
             if (count > pageSize) {
