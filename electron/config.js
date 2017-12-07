@@ -8,7 +8,7 @@ let config = {
   },
 
   browserWindows: {
-    frame: true
+    frame: false
   }
 
 };
