@@ -1,11 +1,13 @@
-const Store = require('electron-store');
-const store = new Store();
+const settings = require("../settings");
+const settingsKeys = settings.settingsKeys;
+
 const _ = require('lodash');
 const {ipcRenderer, shell} = require('electron');
 
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
-const url = store.get('helpme_url');
-const accessToken = store.get('helpme');
+const url = settings.read(settingsKeys.helpMeUrl);
+const endpoints = settings.read(settingsKeys.helpMeEndpoints);
+const accessToken = settings.read(settingsKeys.accessToken);
 
 $(document).ready(function() {
   function initializeTabs() {
@@ -37,7 +39,7 @@ $(document).ready(function() {
 
   function getTicket(ticketNumber) {
     $.ajax({
-      url: url + '/tickets/' + ticketNumber,
+      url: url + endpoints.tickets + "/" + ticketNumber,
       type: "GET",
       headers: {
         'Authorization': "Bearer " + accessToken,
@@ -77,11 +79,11 @@ $(document).ready(function() {
   });
 
    $('#servicnow').click(function(e) {
-    let sysId = store.get('sys_id');
+    let sysId = settings.read(settingsKeys.lastViewedSysId);
     shell.openExternal(serviceNowBaseUrl + sysId);
   });
 
-  let ticket = store.get('ticket');
+  let ticket = settings.read(settingsKeys.lastViewedTicket);
   console.log("ticket: ", ticket);
 
   let number = _.get(ticket, 'number', '');

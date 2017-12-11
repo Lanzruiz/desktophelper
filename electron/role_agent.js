@@ -4,20 +4,24 @@ const si = require('systeminformation');
 const ps = require('current-processes');
 
 /**  U T I L I T I E S  **/
-const Store = require('electron-store');
-const store = new Store();
+const settings = require("../settings");
+const settingsKeys = settings.settingsKeys;
 const _ = require('lodash');
 const async = require('async');
 const moment = require('moment');
 
-const firstname = store.get('firstname');
-const accessToken = store.get('helpme');
-console.log("storeFirstName: ", firstname);
+const firstname = settings.read(settingsKeys.firstName);
+const accessToken = settings.read(settingsKeys.accessToken);
+console.log("firstName: ", firstname);
 console.log("accessToken: ", accessToken);
 
-const url = store.get('helpme_url');
-const platform = store.get('platform');
+const url = settings.read(settingsKeys.helpMeUrl);
+const endpoints = settings.read(settingsKeys.helpMeEndpoints);
+const platform = settings.read(settingsKeys.platform);
+
+const getTicketsQueryParams = 'fields=number,sys_id,state,sys_created_on,sys_created_by,description,short_description';
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
+
 const pageSize = 4;
 const processesCount = 100;
 const timezoneOffset = new Date().getTimezoneOffset();
@@ -145,7 +149,7 @@ $(document).ready(function() {
 
     $.ajax({
       type: "GET",
-      url: url+"/tickets",
+      url: url + endpoints.tickets + '?' + getTicketsQueryParams,
       headers: {
         'Authorization': "Bearer " + accessToken,
         'Content-Type': "application/json"
@@ -692,7 +696,6 @@ $(document).ready(function() {
   });
 
   $('#logout_btn').click(function(e) {
-    store.clear();
     ipcRenderer.send('logout-agent');
   });
 

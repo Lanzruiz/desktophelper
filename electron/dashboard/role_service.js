@@ -1,11 +1,12 @@
-const Store = require('electron-store');
-const store = new Store();
+const settings = require("../settings");
+const settingsKeys = settings.settingsKeys;
 
 const {ipcRenderer, shell} = require('electron')
 const _ = require('lodash');
 
-const url = store.get('helpme_url');
-const accessToken = store.get('helpme');
+const url = settings.read(settingsKeys.helpMeUrl);
+const endpoints = settings.read(settingsKeys.helpMeEndpoints);
+const accessToken = settings.read(settingsKeys.accessToken);
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 let allTickets = [];
@@ -22,7 +23,7 @@ $(document).ready(function() {
   function getTickets() {
     $.ajax({
       type: "GET",
-      url: url + "/tickets",
+      url: url + endpoints.tickets,
       headers: {
         'Authorization': "Bearer " + accessToken,
         'Content-Type': "application/json"
@@ -82,8 +83,8 @@ $(document).ready(function() {
 
     let ticket = _.find(allTickets, {"number": ticketNumber});
     let sysId = $(this).attr('data-ticket-sys-id');
-    store.set('ticket', ticket);
-    store.set('sys_id', sysId);
+    settings.save(settingsKeys.lastViewedTicket, ticket);
+    settings.save(settingsKeys.lastViewedSysId, sysId);
 
     ipcRenderer.send('modal');
   });

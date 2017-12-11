@@ -1,20 +1,23 @@
 const {app, BrowserWindow, ipcMain} = require('electron')
-const Store = require('electron-store');
-const store = new Store();
 const localShortcut = require('electron-localshortcut');
-const config = require("./config");
 
-const {host, secret} = config.api;
+const config = require("./config");
+const {host, secret, endpoints} = config.api;
+
+const settings = require("./settings");
+const settingsKeys = settings.settingsKeys;
 
 function resetStore() {
-  store.clear();
-  store.set('helpme_url', host);
-  store.set('helpme_secret', secret);
-  store.set('platform', process.platform);
+  settings.save(settingsKeys.helpMeUrl, host);
+  settings.save(settingsKeys.helpMeSecret, secret);
+  settings.save(settingsKeys.helpMeEndpoints, endpoints);
+  settings.save(settingsKeys.platform, process.platform);
+  settings.reset();
 }
 
 app.on('ready', function () {
   resetStore();
+  // console.log("app.getPath('userData'): ", app.getPath('userData'));
 
   let detailsWindow;
   let serviceWindow;

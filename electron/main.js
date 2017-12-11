@@ -1,11 +1,15 @@
 const {remote, ipcRenderer, session} = require('electron')
 const _ = require('lodash');
 
-const Store = require('electron-store');
-const store = new Store();
+const settings = require("../settings");
+const settingsKeys = settings.settingsKeys;
 
-const url = store.get('helpme_url');
-const secret = store.get('helpme_secret');
+const url = settings.read(settingsKeys.helpMeUrl);
+const secret = settings.read(settingsKeys.helpMeSecret);
+const endpoints = settings.read(settingsKeys.helpMeEndpoints);
+console.log("url: ", url);
+console.log("secret: ", secret);
+console.log("endpoints: ", endpoints);
 
 let accessToken;
 
@@ -20,7 +24,7 @@ function login(e){
   $.ajax({
     type: "POST",
     dataType: "json",
-    url: url+"/tokens",
+    url: url + endpoints.tokens,
     headers: {
       'Authorization': secret,
       'Content-Type': "application/json"
@@ -29,13 +33,13 @@ function login(e){
     success: function(result) {
       console.log(result);
       accessToken = result.access_token;
-      store.set('helpme', result.access_token);
+      settings.save(settingsKeys.accessToken, accessToken);
 
       // role
       $.ajax({
         type: "GET",
         dataType: "json",
-        url: url+"/user",
+        url: url + endpoints.users,
         headers: {
           'Authorization': "Bearer " + accessToken,
           'Content-Type': "application/json"
@@ -43,8 +47,8 @@ function login(e){
         data: JSON.stringify(data),
         success: function(result, textstatus, xhr) {
           console.log(result);
-          let firstname = _.get(result, "first_name", "");
-          store.set('firstname', firstname);
+          let firstName = _.get(result, "first_name", "");
+          settings.save(settingsKeys.firstName, firstName);
 
           if(result.is_service_desk == false) {
             ipcRenderer.send('agent');
