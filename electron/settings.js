@@ -11,8 +11,10 @@ const settingsKeys = {
   platform: "platform",
   accessToken: "accessToken",
   firstName: "firstName",
+  userRole: "userRole",
   lastViewedTicket: "lastViewedTicket",
-  lastViewedSysId: "lastViewedSysId"
+  lastViewedSysId: "lastViewedSysId",
+  lastProfileFieldSearch: "lastProfileFieldSearch"
 };
 
 function save(settingsKey, settingsValue) {
