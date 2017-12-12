@@ -4,7 +4,7 @@ const si = require('systeminformation');
 const ps = require('current-processes');
 
 /**  U T I L I T I E S  **/
-const settings = require("../settings");
+const settings = require("./settings");
 const settingsKeys = settings.settingsKeys;
 const _ = require('lodash');
 const async = require('async');
@@ -177,7 +177,6 @@ $(document).ready(function() {
             return next();
           }],
         };
-
 
         async.auto(tasks, function(err, results) {
           console.log("abc")

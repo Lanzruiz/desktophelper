@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <link rel="stylesheet" href="./assets/css/bootstrap.3.3.7.min.css">
+  <script>window.$ = window.jQuery = require('jquery');</script>
+  <script src="./assets/js/bootstrap.3.3.7.min.js"></script>
+  <script src="./assets/js/jquery.3.2.1.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="./assets/js/fontawesome.js"></script>
+<style>
+body {font-family: "Lato", sans-serif; background-color: #ddd;}
+
+/* Style the tab */
+div.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+/* Style the buttons inside the tab */
+div.tab button {
+    background-color: inherit;
+    float: left;
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 14px 16px;
+    transition: 0.3s;
+    font-size: 17px;
+}
+
+/* Change background color of buttons on hover */
+div.tab button:hover {
+    background-color: #ddd;
+}
+
+/* Create an active/current tablink class */
+div.tab button.active {
+    background-color: #ccc;
+}
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
+
+/* Style the close button */
+.topright {
+    float: right;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+.topright:hover {color: red;}
+.jumbotron {
+background: #358CCE;
+color: #FFF;
+border-radius: 0px;
+}
+.jumbotron-sm { padding-top: 24px;
+padding-bottom: 24px; }
+.jumbotron small {
+color: #FFF;
+}
+.h1 small {
+font-size: 24px;
+}
+.h3, h3 {
+    font-size: 20px;
+    color: #103f67;
+}
+textarea.form-control {
+    height: 230px;
+    margin-top: 23px;
+}
+.margin-top-20px {
+   margin-top: 20px;
+}
+.border-right {
+   border-right: 1px solid #ccc;
+}
+.float-right {
+  float: right;
+}
+p.list-group-item-text {
+    font-size: 10px;
+}
+strong.list-group-item-text {
+    font-size: 11px;
+}
+.header-up {
+
+    background: #003a63;
+    display: block;
+}
+.aloricalogo {
+
+    width: 15%;
+
+    padding: 10px;
+}
+.orange {
+
+    /*color: #;*/
+}
+.list-group-item {
+
+   padding-top: 8px;
+   padding-bottom: 8px;
+}
+
+#imaginary_container{
+    margin-top:20%; /* Don't copy this */
+    float:left;
+}
+.stylish-input-group {
+    margin-top: 52px;
+    margin-bottom: 10px;
+}
+.stylish-input-group .input-group-addon{
+    background: white !important;
+
+}
+.stylish-input-group .form-control{
+  border-right:0;
+  box-shadow:0 0 0;
+  border-color:#ccc;
+}
+.stylish-input-group button{
+    border:0;
+    background:transparent;
+}
+.center {
+   display:table; margin:0 auto; margin-top: -13px
+}
+  #ticket_item_template {
+    display: none;
+  }
+
+  a.page-link.active {
+    background-color: #103f67;
+    color: #FFFFFF;
+  }
+
+  img#submit_loader {
+    display: none;
+    height: 34px;
+    width: 34px;
+  }
+
+  span#submit_loader_message {
+    display: none;
+  }
+
+  a.list-group-item,
+  a.page-link {
+    cursor: pointer;
+  }
+
+  .timeline-item {
+    background: #fff;
+    border: 1px solid;
+    border-color: #e5e6e9 #dfe0e4 #d0d1d5;
+    border-radius: 4px;
+    padding: 8px;
+    margin: 0 auto;
+    width: 331.25px;
+    height: 45px;
+  }
+
+  @keyframes placeHolderShimmer{
+    0%{
+      background-position: -468px 0
+    }
+    100%{
+      background-position: 468px 0
+    }
+  }
+
+  .animated-background {
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: placeHolderShimmer;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background: linear-gradient(to right, #eeeeee 8%, #dddddd 18%, #eeeeee 33%);
+    background-size: 800px 104px;
+    height: 30px;
+    position: relative;
+  }
+
+  .background-masker {
+    background: #fff;
+    position: absolute;
+  }
+
+  .background-masker.header-top,
+  .background-masker.header-bottom,
+  .background-masker.subheader-bottom {
+    top: 0;
+    left: 200px;
+    right: 39px;
+    height: 16px;
+  }
+
+  .background-masker.header-left,
+  .background-masker.subheader-left,
+  .background-masker.header-right,
+  .background-masker.subheader-right {
+    top: 16px;
+    left: 0px;
+    height: 8px;
+    width: 100%;
+  }
+
+  .background-masker.content-top {
+    top: 18px;
+    left: 67px;
+    right: 78px;
+    height: 13px;
+  }
+
+    .margin-top {
+        margin-top: 30px;
+    }
+
+
+</style>
+
+</head>
+<body>
+  <div class="header-up">
+     <img class="aloricalogo" src="./assets/img/Alorica_Logo_White_Orange.png">
+     <div style="float: right; padding-top:30px; padding-right: 30px; color: #FFF; padding-bottom: 5px; padding-left: 10px;">
+           <i class="fa fa-minus" style="margin-left: 30px;" aria-hidden="true"></i>
+          <i id="logout_btn" class="fa fa-power-off" style="margin-left: 30px; margin-top: -30px" aria-hidden="true"></i>
+     </div>
+  </div>
+  <div class="container-fluid">
+      <div class="row">
+         <div class="col-sm-7 border-right">
+           <h3><strong>Good Day <span id="firstname"></span>.</strong> What can we help you with?</h3>
+             <form>
+              <div class="form-group">
+                <textarea class="form-control" rows="5" id="description"></textarea>
+                <button id="submit_report_btn" type="button" class="btn btn-primary btn-block btn-warning margin-top-20px">Help Me!</button>
+              </div>
+            </form>
+           <img id="submit_loader" src="./assets/img/spinner.gif">
+           <span id="submit_loader_message">Test span</span>
+         </div>
+         <div class="col-sm-5">
+            <h3 style="float: right;">Incidents</h3>
+            <h3 style="float: left;">Help Me</h3>
+
+
+            <div class="input-group stylish-input-group">
+                <input id="search" type="text" class="form-control"  placeholder="Search" >
+                <span class="input-group-addon">
+                    <button id="search_btn" type="submit">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </button>
+                </span>
+            </div>
+
+            <div id="list_group" class="list-group">
+              <div class="timeline-wrapper">
+                <div class="timeline-item">
+                  <div class="animated-background">
+                    <div class="background-masker header-top"></div>
+                    <div class="background-masker header-left"></div>
+                    <div class="background-masker header-right"></div>
+                    <div class="background-masker header-bottom"></div>
+                    <div class="background-masker subheader-left"></div>
+                    <div class="background-masker subheader-right"></div>
+                    <div class="background-masker subheader-bottom"></div>
+                    <div class="background-masker content-top"></div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="animated-background">
+                    <div class="background-masker header-top"></div>
+                    <div class="background-masker header-left"></div>
+                    <div class="background-masker header-right"></div>
+                    <div class="background-masker header-bottom"></div>
+                    <div class="background-masker subheader-left"></div>
+                    <div class="background-masker subheader-right"></div>
+                    <div class="background-masker subheader-bottom"></div>
+                    <div class="background-masker content-top"></div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="animated-background">
+                    <div class="background-masker header-top"></div>
+                    <div class="background-masker header-left"></div>
+                    <div class="background-masker header-right"></div>
+                    <div class="background-masker header-bottom"></div>
+                    <div class="background-masker subheader-left"></div>
+                    <div class="background-masker subheader-right"></div>
+                    <div class="background-masker subheader-bottom"></div>
+                    <div class="background-masker content-top"></div>
+                  </div>
+                </div>
+
+                <div class="timeline-item">
+                  <div class="animated-background">
+                    <div class="background-masker header-top"></div>
+                    <div class="background-masker header-left"></div>
+                    <div class="background-masker header-right"></div>
+                    <div class="background-masker header-bottom"></div>
+                    <div class="background-masker subheader-left"></div>
+                    <div class="background-masker subheader-right"></div>
+                    <div class="background-masker subheader-bottom"></div>
+                    <div class="background-masker content-top"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+             <ul id="tickets_pagination" class="pagination center">
+              <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+              <li class="page-item"><a class="page-link" href="#">1</a></li>
+              <li class="page-item"><a class="page-link" href="#">2</a></li>
+              <li class="page-item"><a class="page-link" href="#">3</a></li>
+              <li class="page-item"><a class="page-link" href="#">Next</a></li>
+            </ul>
+          </div>
+
+          <div id="ticket_item_template">
+            <a class="list-group-item active">
+              <p class="ticket-heading"></p>
+              <p class="ticket-number list-group-item-text"></p>
+            </a>
+          </div>
+      </div>
+  </div>
+
+<script src="./role_agent.js"></script>
+
+</body>
+</html>

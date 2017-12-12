@@ -28,7 +28,7 @@ app.on('ready', function () {
     height: 500,
     frame: config.browserWindows.frame
   });
-  mainWindow.loadURL('file://' + __dirname + '/view/login.html');
+  mainWindow.loadURL('file://' + __dirname + '/login.html');
   mainWindow.setResizable(false);
 
   ipcMain.on('agent', function () {
@@ -38,7 +38,7 @@ app.on('ready', function () {
       show: false,
       frame: config.browserWindows.frame
     });
-    agentWindow.loadURL('file://' + __dirname + '/view/role_agent.html');
+    agentWindow.loadURL('file://' + __dirname + '/role_agent.html');
     agentWindow.setResizable(false);
     agentWindow.show();
     mainWindow.hide();

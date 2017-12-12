@@ -1,7 +1,7 @@
 const {remote, ipcRenderer, session} = require('electron')
 const _ = require('lodash');
 
-const settings = require("../settings");
+const settings = require("./settings");
 const settingsKeys = settings.settingsKeys;
 
 const url = settings.read(settingsKeys.helpMeUrl);
