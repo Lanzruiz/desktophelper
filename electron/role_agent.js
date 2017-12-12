@@ -1,5 +1,5 @@
 /**  S Y S T E M  **/
-const {ipcRenderer, shell} = require('electron')
+const {ipcRenderer, shell} = require('electron');
 const si = require('systeminformation');
 const ps = require('current-processes');
 
