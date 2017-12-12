@@ -1,14 +1,18 @@
 {
-  "name": "Help Me",
+  "name": "HelpMe",
   "version": "0.1.0",
-  "description": "",
+  "description": "helpme app",
   "main": "app.js",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "dist": "build -w --x64 --ia32"
   },
   "author": "Alorica GBS",
   "license": "MIT",
   "devDependencies": {
+    "electron": "^1.7.9",
+    "electron-builder": "^19.48.3",
+    "electron-packager": "^10.1.0",
     "electron-prebuilt": "^0.28.3"
   },
   "dependencies": {
@@ -16,12 +20,18 @@
     "current-processes": "^0.2.1",
     "datatables.net": "^1.10.16",
     "datatables.net-dt": "^1.10.16",
-    "electron": "^1.7.9",
     "electron-localshortcut": "^2.0.2",
     "electron-store": "^1.3.0",
     "jquery": "^3.2.1",
     "lodash": "^4.17.4",
     "moment": "^2.19.3",
     "systeminformation": "^3.33.8"
+  },
+  "build": {
+    "appId": "com.alorica.helpme",
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    }
   }
 }
