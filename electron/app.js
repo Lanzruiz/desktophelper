@@ -19,6 +19,8 @@ app.on('ready', function () {
   resetStore();
   // console.log("app.getPath('userData'): ", app.getPath('userData'));
 
+  let profileWindow;
+  let searchProfileWindow;
   let detailsWindow;
   let serviceWindow;
   let agentWindow;
@@ -30,6 +32,21 @@ app.on('ready', function () {
   });
   mainWindow.loadURL('file://' + __dirname + '/login.html');
   mainWindow.setResizable(false);
+
+  ipcMain.on('profile', function() {
+    console.log("profile!");
+    profileWindow = new BrowserWindow({
+      width: 350,
+      height: 550,
+      show: false,
+      resizable: false,
+      frame: config.browserWindows.frame
+    });
+    profileWindow.loadURL('file://' + __dirname + '/profile.html');
+    profileWindow.setResizable(false);
+    profileWindow.show();
+    mainWindow.hide();
+  });
 
   ipcMain.on('agent', function () {
     agentWindow = new BrowserWindow({
@@ -78,6 +95,16 @@ app.on('ready', function () {
     mainWindow.hide();
   });
 
+  ipcMain.on('logout-profile', function() {
+    resetStore();
+    if (profileWindow) {
+      profileWindow.close();
+      profileWindow = null;
+    }
+
+    mainWindow.show();
+  });
+
   ipcMain.on('logout-agent', function() {
     resetStore();
     if (agentWindow) {
@@ -107,6 +134,19 @@ app.on('ready', function () {
 
   ipcMain.on('search-in-details', (event, arg) => {
     detailsWindow.webContents.findInPage(arg);
+  });
+
+  ipcMain.on('search-profile-field', (event, arg) => {
+    searchProfileWindow = new BrowserWindow({
+      width: 1280,
+      height: 720,
+      show: false,
+      resizable: false,
+      frame: config.browserWindows.frame
+    });
+    searchProfileWindow.loadURL('file://' + __dirname + '/profile_field_search.html');
+    searchProfileWindow.show();
+    profileWindow.hide();
   });
 
 });

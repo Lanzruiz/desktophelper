@@ -51,10 +51,14 @@ function login(e){
           settings.save(settingsKeys.firstName, firstName);
 
           if(result.is_service_desk == false) {
-            ipcRenderer.send('agent');
+            // ipcRenderer.send('agent');
+            settings.save(settingsKeys.userRole, "agent");
           } else {
-            ipcRenderer.send('service');
+            // ipcRenderer.send('service');
+            settings.save(settingsKeys.userRole, "service");
           }
+
+          ipcRenderer.send('profile');
         }
       });
     },
