@@ -8,12 +8,14 @@ let config = {
     endpoints: {
       tokens: "/tokens",
       tickets: "/tickets",
-      users: "/users"
+      users: "/users",
+      locations: "/locations",
+      clients: "/clients"
     }
   },
 
   browserWindows: {
-    frame: false
+    frame: true
   }
 
 };
