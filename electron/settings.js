@@ -14,7 +14,11 @@ const settingsKeys = {
   userRole: "userRole",
   lastViewedTicket: "lastViewedTicket",
   lastViewedSysId: "lastViewedSysId",
-  lastProfileFieldSearch: "lastProfileFieldSearch"
+  lastProfileFieldSearch: "lastProfileFieldSearch",
+  profileLocation: "profileLocation",
+  profileBusinessUnit: "profileBusinessUnit",
+  profileClient: "profileClient",
+  profileCallBackNumber: "profileCallBackNumber"
 };
 
 function save(settingsKey, settingsValue) {

@@ -35,6 +35,11 @@
                 text-align: right;
                 width: 50px;
             }
+
+            a.page-link,
+            a.result-id {
+                cursor: pointer;
+            }
         </style>
     </head>
     <body>
@@ -55,8 +60,9 @@
                                 <li class="page-item"><a id="first_page" class="page-link" href="#">&laquo;&laquo;</a></li>
                                 <li class="page-item"><a id="previous" class="page-link" href="#">&laquo;</a></li>
                                 <li>
+                                    <label>Page </label>
                                     <input id="page_number" type="text" value="1" />
-                                    <label id="total_pages">/ 100</label>
+                                    <label id="total_pages"> of 10</label>
                                 </li>
                                 <li class="page-item"><a id="next" class="page-link" href="#">&raquo;</a></li>
                                 <li class="page-item"><a id="last_page" class="page-link" href="#">&raquo;&raquo;</a></li>
