@@ -107,8 +107,19 @@
             border-right: none;
         }
 
+        input[type="text"]:disabled {
+            background-color: white;
+            cursor: default;
+        }
+
+        input.has-error {
+            border-color: #A94442;
+        }
+
         p.instructions {
             text-align: center;
+            margin-top: 12px;
+            font-weight: bold;
         }
 
     </style>
@@ -133,15 +144,14 @@
                                         <span class="input-group-addon">
                                           <i class="left-icon icon-location">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
                                         </span>
-                                        <input class="form-control no-right-border" type="text" id="location" class="profile-input-text" placeholder="Location">
+                                        <input disabled class="form-control no-right-border" type="text" id="location" class="profile-input-text" placeholder="Location">
                                         <span class="input-group-addon addon-right">
                                           <i class="icon-search" id="locations">&nbsp;&nbsp;&nbsp;&nbsp;</i>
                                         </span>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                        </span>
-                                        <div class="input-group">
+                                    <div class="input-group">
                                         <span class="input-group-addon">
                                           <i class="icon-business-unit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
                                         </span>
@@ -161,7 +171,7 @@
                                         <span class="input-group-addon">
                                           <i class="icon-client">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
                                         </span>
-                                        <input class="form-control no-right-border" type="text" id="client" class="profile-input-text" placeholder="Client">
+                                        <input disabled class="form-control no-right-border" type="text" id="client" class="profile-input-text" placeholder="Client">
                                         <span class="input-group-addon addon-right">
                                           <i class="icon-search" id="clients">&nbsp;&nbsp;&nbsp;&nbsp;</i>
                                         </span>
@@ -172,7 +182,7 @@
                                         <span class="input-group-addon">
                                           <i class="icon-callback-number">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</i>
                                         </span>
-                                        <input class="form-control" type="text" id="callback_number" class="profile-input-text" placeholder="Call Back Number">
+                                        <input class="form-control" type="text" id="call_back_number" class="profile-input-text" placeholder="Call Back Number">
                                     </div>
                                 </div>
                                 <div class="form-group">
