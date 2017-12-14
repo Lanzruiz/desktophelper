@@ -19,7 +19,7 @@ const url = settings.read(settingsKeys.helpMeUrl);
 const endpoints = settings.read(settingsKeys.helpMeEndpoints);
 const platform = settings.read(settingsKeys.platform);
 
-const getTicketsQueryParams = 'fields=number,sys_id,state,sys_created_on,sys_created_by,description,short_description';
+const getTicketsQueryParams = 'fields=number,sys_id,incident_state,sys_created_on,sys_created_by,description,short_description';
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 const pageSize = 4;
@@ -82,7 +82,7 @@ $(document).ready(function() {
     let ticketHeadingContent = '<strong>'
       + excerpt
       + '<span class="badge float-right">'
-      + _.get(ticketStateNames, ticket.state, "")
+      + _.get(ticketStateNames, ticket.incident_state, "")
       + '</span>'
       + '</strong>';
 
