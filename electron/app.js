@@ -149,6 +149,16 @@ app.on('ready', function () {
     profileWindow.hide();
   });
 
+  ipcMain.on('save-profile-field', (event, arg) => {
+    if (searchProfileWindow) {
+      searchProfileWindow.close();
+      searchProfileWindow = null;
+    }
+
+    profileWindow.show();
+    profileWindow.webContents.send('load-profile-field', arg);
+  });
+
 });
 
 
