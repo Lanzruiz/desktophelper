@@ -38,7 +38,7 @@ $(document).ready(function() {
     let tableHeaders;
 
     if (profileField == "locations") {
-      defaultQueryParams = "?limit=20&order_by=name&order_direction=asc";
+      defaultQueryParams = "?limit=20&order_by=name&order_direction=asc&fields=name,u_location_id,sys_id";
       tableHeaders = '<tr>' +
         '<th>Name</th>' +
         '<th>Location ID</th>' +
