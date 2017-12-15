@@ -1,5 +1,5 @@
 /**  S Y S T E M  **/
-const {ipcRenderer, shell} = require('electron')
+const {ipcRenderer, shell} = require('electron');
 const si = require('systeminformation');
 const ps = require('current-processes');
 
@@ -10,6 +10,12 @@ const _ = require('lodash');
 const async = require('async');
 const moment = require('moment');
 
+/**  P R O F I L E  **/
+const profileLocation = settings.read(settingsKeys.profileLocation);
+const profileBusinessUnit = settings.read(settingsKeys.profileBusinessUnit);
+const profileClient = settings.read(settingsKeys.profileClient);
+const profileCallBackNumber = settings.read(settingsKeys.profileCallBackNumber);
+
 const firstname = settings.read(settingsKeys.firstName);
 const accessToken = settings.read(settingsKeys.accessToken);
 console.log("firstName: ", firstname);
@@ -19,7 +25,7 @@ const url = settings.read(settingsKeys.helpMeUrl);
 const endpoints = settings.read(settingsKeys.helpMeEndpoints);
 const platform = settings.read(settingsKeys.platform);
 
-const getTicketsQueryParams = 'fields=number,sys_id,state,sys_created_on,sys_created_by,description,short_description';
+const getTicketsQueryParams = 'fields=number,sys_id,incident_state,sys_created_on,sys_created_by,description,short_description';
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 const pageSize = 4;
@@ -82,7 +88,7 @@ $(document).ready(function() {
     let ticketHeadingContent = '<strong>'
       + excerpt
       + '<span class="badge float-right">'
-      + _.get(ticketStateNames, ticket.state, "")
+      + _.get(ticketStateNames, ticket.incident_state, "")
       + '</span>'
       + '</strong>';
 
@@ -624,7 +630,11 @@ $(document).ready(function() {
         urgency: 3,
         impact:  1,
         sys_info: sysinfo,
-        comments: moment()
+        comments: moment(),
+        u_call_back_number: _.get(profileCallBackNumber, "name", ""),
+        u_line_of_business: _.get(profileBusinessUnit, "name", ""),
+        u_impacted_client: _.get(profileClient, "name", ""),
+        location: _.get(profileLocation, "name", "")
       };
 
       console.log("data: ", data);

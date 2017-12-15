@@ -47,14 +47,28 @@ function login(e){
         data: JSON.stringify(data),
         success: function(result, textstatus, xhr) {
           console.log(result);
+
+          let lastLoggedUsername = settings.read(settingsKeys.lastLoggedUsername);
+          if (lastLoggedUsername != data.username) {
+            settings.remove(settingsKeys.profileLocation);
+            settings.remove(settingsKeys.profileBusinessUnit);
+            settings.remove(settingsKeys.profileClient);
+            settings.remove(settingsKeys.profileCallBackNumber);
+          }
+
+          settings.save(settingsKeys.lastLoggedUsername, data.username);
           let firstName = _.get(result, "first_name", "");
           settings.save(settingsKeys.firstName, firstName);
 
           if(result.is_service_desk == false) {
-            ipcRenderer.send('agent');
+            // ipcRenderer.send('agent');
+            settings.save(settingsKeys.userRole, "agent");
           } else {
-            ipcRenderer.send('service');
+            // ipcRenderer.send('service');
+            settings.save(settingsKeys.userRole, "service");
           }
+
+          ipcRenderer.send('profile');
         }
       });
     },

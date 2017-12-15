@@ -19,19 +19,13 @@ app.on('ready', function () {
   resetStore();
   // console.log("app.getPath('userData'): ", app.getPath('userData'));
 
+  let profileWindow;
+  let searchProfileWindow;
   let detailsWindow;
   let serviceWindow;
   let agentWindow;
 
-  let mainWindow = new BrowserWindow({
-    width: 350,
-    height: 500,
-    frame: config.browserWindows.frame
-  });
-  mainWindow.loadURL('file://' + __dirname + '/login.html');
-  mainWindow.setResizable(false);
-
-  ipcMain.on('agent', function () {
+  function showAgentWindow() {
     agentWindow = new BrowserWindow({
       width: 900,
       height: 500,
@@ -41,6 +35,40 @@ app.on('ready', function () {
     agentWindow.loadURL('file://' + __dirname + '/role_agent.html');
     agentWindow.setResizable(false);
     agentWindow.show();
+  }
+
+  function showServiceDeskWindow() {
+    serviceWindow = new BrowserWindow({
+      width: 1300,
+      height: 800,
+      show: false,
+      resizable: false,
+      frame: config.browserWindows.frame
+    });
+    serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html');
+    serviceWindow.show();
+  }
+
+  let mainWindow = new BrowserWindow({
+    width: 350,
+    height: 500,
+    frame: config.browserWindows.frame
+  });
+  mainWindow.loadURL('file://' + __dirname + '/login.html');
+  mainWindow.setResizable(false);
+
+  ipcMain.on('profile', function() {
+    console.log("profile!");
+    profileWindow = new BrowserWindow({
+      width: 350,
+      height: 550,
+      show: false,
+      resizable: false,
+      frame: config.browserWindows.frame
+    });
+    profileWindow.loadURL('file://' + __dirname + '/profile.html');
+    profileWindow.setResizable(false);
+    profileWindow.show();
     mainWindow.hide();
   });
 
@@ -65,17 +93,14 @@ app.on('ready', function () {
     });
   });
 
-  ipcMain.on('service', function () {
-    serviceWindow = new BrowserWindow({
-      width: 1300,
-      height: 800,
-      show: false,
-      resizable: false,
-      frame: config.browserWindows.frame
-    });
-    serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html');
-    serviceWindow.show();
-    mainWindow.hide();
+  ipcMain.on('logout-profile', function() {
+    resetStore();
+    if (profileWindow) {
+      profileWindow.close();
+      profileWindow = null;
+    }
+
+    mainWindow.show();
   });
 
   ipcMain.on('logout-agent', function() {
@@ -107,6 +132,55 @@ app.on('ready', function () {
 
   ipcMain.on('search-in-details', (event, arg) => {
     detailsWindow.webContents.findInPage(arg);
+  });
+
+  ipcMain.on('search-profile-field', (event, arg) => {
+    searchProfileWindow = new BrowserWindow({
+      width: 1280,
+      height: 720,
+      show: false,
+      resizable: false,
+      frame: config.browserWindows.frame
+    });
+    searchProfileWindow.loadURL('file://' + __dirname + '/profile_field_search.html');
+    searchProfileWindow.show();
+    profileWindow.hide();
+  });
+
+  ipcMain.on('save-profile-field', (event, arg) => {
+    if (searchProfileWindow) {
+      searchProfileWindow.close();
+      searchProfileWindow = null;
+    }
+
+    profileWindow.show();
+    profileWindow.webContents.send('load-profile-field', arg);
+  });
+
+  ipcMain.on('close-profile-field', (event, arg) => {
+    if (searchProfileWindow) {
+      searchProfileWindow.close();
+      searchProfileWindow = null;
+    }
+
+    profileWindow.show();
+  });
+
+  ipcMain.on('save-profile', (event, arg) => {
+    let userRole = settings.read(settingsKeys.userRole);
+    if (profileWindow) {
+      profileWindow.close();
+      profileWindow = null;
+    }
+
+    if (userRole == "agent") {
+      showAgentWindow();
+    }
+    else if (userRole == "service") {
+      showServiceDeskWindow();
+    }
+
+    mainWindow.hide();
   });
 
 });
