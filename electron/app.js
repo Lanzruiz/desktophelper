@@ -25,6 +25,30 @@ app.on('ready', function () {
   let serviceWindow;
   let agentWindow;
 
+  function showAgentWindow() {
+    agentWindow = new BrowserWindow({
+      width: 900,
+      height: 500,
+      show: false,
+      frame: config.browserWindows.frame
+    });
+    agentWindow.loadURL('file://' + __dirname + '/role_agent.html');
+    agentWindow.setResizable(false);
+    agentWindow.show();
+  }
+
+  function showServiceDeskWindow() {
+    serviceWindow = new BrowserWindow({
+      width: 1300,
+      height: 800,
+      show: false,
+      resizable: false,
+      frame: config.browserWindows.frame
+    });
+    serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html');
+    serviceWindow.show();
+  }
+
   let mainWindow = new BrowserWindow({
     width: 350,
     height: 500,
@@ -48,19 +72,6 @@ app.on('ready', function () {
     mainWindow.hide();
   });
 
-  ipcMain.on('agent', function () {
-    agentWindow = new BrowserWindow({
-      width: 900,
-      height: 500,
-      show: false,
-      frame: config.browserWindows.frame
-    });
-    agentWindow.loadURL('file://' + __dirname + '/role_agent.html');
-    agentWindow.setResizable(false);
-    agentWindow.show();
-    mainWindow.hide();
-  });
-
   ipcMain.on('modal', function () {
     detailsWindow = new BrowserWindow({
       width: 900,
@@ -80,19 +91,6 @@ app.on('ready', function () {
     localShortcut.register(detailsWindow, 'Ctrl+F', () => {
       detailsWindow.webContents.send('toggle-search');
     });
-  });
-
-  ipcMain.on('service', function () {
-    serviceWindow = new BrowserWindow({
-      width: 1300,
-      height: 800,
-      show: false,
-      resizable: false,
-      frame: config.browserWindows.frame
-    });
-    serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html');
-    serviceWindow.show();
-    mainWindow.hide();
   });
 
   ipcMain.on('logout-profile', function() {
@@ -157,6 +155,32 @@ app.on('ready', function () {
 
     profileWindow.show();
     profileWindow.webContents.send('load-profile-field', arg);
+  });
+
+  ipcMain.on('close-profile-field', (event, arg) => {
+    if (searchProfileWindow) {
+      searchProfileWindow.close();
+      searchProfileWindow = null;
+    }
+
+    profileWindow.show();
+  });
+
+  ipcMain.on('save-profile', (event, arg) => {
+    let userRole = settings.read(settingsKeys.userRole);
+    if (profileWindow) {
+      profileWindow.close();
+      profileWindow = null;
+    }
+
+    if (userRole == "agent") {
+      showAgentWindow();
+    }
+    else if (userRole == "service") {
+      showServiceDeskWindow();
+    }
+
+    mainWindow.hide();
   });
 
 });
