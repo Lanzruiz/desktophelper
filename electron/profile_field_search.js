@@ -5,6 +5,7 @@ const {ipcRenderer} = require('electron');
 const settings = require("./settings");
 const settingsKeys = settings.settingsKeys;
 const _ = require('lodash');
+const async = require('async');
 
 /**  A P I  **/
 const url = settings.read(settingsKeys.helpMeUrl);
@@ -64,7 +65,7 @@ $(document).ready(function() {
     }
   }
 
-  function showPagination(count, pageNumber) {
+  function showPagination(count, pageNumber, callback) {
     pageNumber = parseInt(pageNumber);
     let numberOfPages = Math.ceil( (count / pageSize) );
 
@@ -74,7 +75,7 @@ $(document).ready(function() {
       paginationContent += '<li class="page-item"><a data-page="' + (pageNumber - 1) + '" class="page-link">&laquo;</a></li>';
     }
 
-    paginationContent += '<li>' +
+    paginationContent += '<li class="page-jump">' +
       '<label>Page </label>' +
       '<input id="page_number" type="text" value="' + pageNumber + '" />' +
       '<label id="total_pages"> of ' + numberOfPages + '</label>' +
@@ -86,9 +87,14 @@ $(document).ready(function() {
     }
 
     $('#tickets_pagination').html(paginationContent);
+    if (callback) {
+      return callback();
+    }
   }
 
   function getLookupValues(pageNumber) {
+    showLoaders();
+
     $.ajax({
       type: "GET",
       url: url + endpoint + defaultQueryParams + '&page=' + pageNumber,
@@ -120,8 +126,23 @@ $(document).ready(function() {
         }
 
         console.log("resultItems: ", resultItems);
-        showResults(pageNumber);
-        showPagination(totalItemsCount, pageNumber);
+
+        let tasks = {
+          displayResults: function(next) {
+            showResults(pageNumber, next);
+          },
+
+          displayPagination: function(next) {
+            showPagination(totalItemsCount, pageNumber, next);
+          },
+
+          removeLoaders: ["displayResults", "displayPagination", function(results, next) {
+            hideLoaders();
+            return next();
+          }]
+        };
+
+        async.auto(tasks, function(err, results) {});
       }
     });
   }
@@ -143,6 +164,16 @@ $(document).ready(function() {
     }
 
     getLookupValues(pageNumber);
+  }
+
+  function showLoaders() {
+    $('#tickets_pagination').html("");
+    $('#pagination_loader').show();
+    $('#results_body').html($('#table_placeholder').html());
+  }
+
+  function hideLoaders() {
+    $('#pagination_loader').hide();
   }
 
   function init() {
@@ -213,6 +244,10 @@ $(document).ready(function() {
     settings.save(settingsKey, data);
 
     ipcRenderer.send('save-profile-field', data);
+  });
+
+  $('#close').click(function(e) {
+    ipcRenderer.send('close-profile-field');
   });
 
 
