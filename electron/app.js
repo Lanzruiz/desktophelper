@@ -218,7 +218,11 @@ if(iShouldQuit){app.quit();return;}
          mainWindow.focus();
       } else if(mainWindow.isDestroyed() == true) {
          showAgentWindow();
-      }   
+      } else if(agentWindow.isVisible()) {
+         agentWindow.focus();
+      } else if(serviceWindow.isVisible()) {
+         serviceWindow.focus();
+      }
   })
 
 });
