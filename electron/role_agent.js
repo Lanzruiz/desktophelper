@@ -10,6 +10,12 @@ const _ = require('lodash');
 const async = require('async');
 const moment = require('moment');
 
+/**  P R O F I L E  **/
+const profileLocation = settings.read(settingsKeys.profileLocation);
+const profileBusinessUnit = settings.read(settingsKeys.profileBusinessUnit);
+const profileClient = settings.read(settingsKeys.profileClient);
+const profileCallBackNumber = settings.read(settingsKeys.profileCallBackNumber);
+
 const firstname = settings.read(settingsKeys.firstName);
 const accessToken = settings.read(settingsKeys.accessToken);
 console.log("firstName: ", firstname);
@@ -624,7 +630,11 @@ $(document).ready(function() {
         urgency: 3,
         impact:  1,
         sys_info: sysinfo,
-        comments: moment()
+        comments: moment(),
+        u_call_back_number: _.get(profileCallBackNumber, "name", ""),
+        u_line_of_business: _.get(profileBusinessUnit, "name", ""),
+        u_impacted_client: _.get(profileClient, "name", ""),
+        location: _.get(profileLocation, "name", "")
       };
 
       console.log("data: ", data);
