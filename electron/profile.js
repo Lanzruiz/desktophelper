@@ -6,11 +6,19 @@ const settings = require("./settings");
 const settingsKeys = settings.settingsKeys;
 const _ = require('lodash');
 
-/**  A P I  **/
-const url = settings.read(settingsKeys.helpMeUrl);
-const endpoints = settings.read(settingsKeys.helpMeEndpoints);
-
 $(document).ready(function() {
+
+  function loadProfile() {
+    let profileLocation = settings.read(settingsKeys.profileLocation);
+    let profileBusinessUnit = settings.read(settingsKeys.profileBusinessUnit);
+    let profileClient = settings.read(settingsKeys.profileClient);
+    let profileCallBackNumber = settings.read(settingsKeys.profileCallBackNumber);
+
+    $('#location').val(_.get(profileLocation, "name", ""));
+    $('#business_unit').val(_.get(profileBusinessUnit, "sysId", ""));
+    $('#client').val(_.get(profileClient, "name", ""));
+    $('#call_back_number').val(_.get(profileCallBackNumber, "name", ""));
+  }
 
   ipcRenderer.on('load-profile-field', (event, arg) => {
     console.log("event: ", event);
@@ -76,7 +84,21 @@ $(document).ready(function() {
       return;
     }
 
+    settings.save(settingsKeys.profileBusinessUnit, {
+      profileField: "businessUnit",
+      sysId: businessUnit,
+      name: businessUnitName
+    });
 
+    settings.save(settingsKeys.profileCallBackNumber, {
+      profileField: "callBackNumber",
+      sysId: callBackNumber,
+      name: callBackNumber
+    });
+
+    ipcRenderer.send('save-profile');
   });
+
+  loadProfile();
 
 });
