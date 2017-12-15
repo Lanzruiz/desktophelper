@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require('electron')
+const {app, Tray, BrowserWindow, ipcMain} = require('electron')
 const localShortcut = require('electron-localshortcut');
 
 const config = require("./config");
@@ -6,6 +6,11 @@ const {host, secret, endpoints} = config.api;
 
 const settings = require("./settings");
 const settingsKeys = settings.settingsKeys;
+
+const path = require('path');
+
+const iconPath = path.join(__dirname, 'icon.png');
+let appIcon = null;
 
 function resetStore() {
   settings.save(settingsKeys.helpMeUrl, host);
@@ -19,11 +24,25 @@ app.on('ready', function () {
   resetStore();
   // console.log("app.getPath('userData'): ", app.getPath('userData'));
 
+  appIcon = new Tray(iconPath);
+
+  appIcon.setToolTip("Help Me Application!");
+
   let profileWindow;
   let searchProfileWindow;
   let detailsWindow;
   let serviceWindow;
   let agentWindow;
+
+  var iShouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
+    if (mainWindow) {
+        if (mainWindow.isMinimized()) mainWindow.restore();
+        mainWindow.show();
+        mainWindow.focus();
+    }
+    return true;
+});
+if(iShouldQuit){app.quit();return;}
 
   function showAgentWindow() {
     agentWindow = new BrowserWindow({
@@ -47,6 +66,17 @@ app.on('ready', function () {
     });
     serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html');
     serviceWindow.show();
+  }
+
+  function showLoginWindow() {
+
+    let mainWindow = new BrowserWindow({
+      width: 350,
+      height: 500,
+      frame: config.browserWindows.frame
+    });
+    mainWindow.loadURL('file://' + __dirname + '/login.html');
+    mainWindow.setResizable(false);
   }
 
   let mainWindow = new BrowserWindow({
@@ -182,6 +212,14 @@ app.on('ready', function () {
 
     mainWindow.hide();
   });
+
+  appIcon.on('click', () => {
+      if(mainWindow.isVisible()) {
+         mainWindow.focus();
+      } else if(mainWindow.isDestroyed() == true) {
+         showAgentWindow();
+      }   
+  })
 
 });
 
