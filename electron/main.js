@@ -46,15 +46,18 @@ $(document).ready(function() {
         console.log(result);
         accessToken = result.access_token;
         settings.save(settingsKeys.accessToken, accessToken);
-        settings.save(settingsKeys.lastLoggedUsername, data.username);
 
         let lastLoggedUsername = settings.read(settingsKeys.lastLoggedUsername);
+        console.log("lastLoggedUsername: ", lastLoggedUsername);
+        console.log("data.username: ", data.username);
         if (lastLoggedUsername != data.username) {
           settings.remove(settingsKeys.profileLocation);
           settings.remove(settingsKeys.profileBusinessUnit);
           settings.remove(settingsKeys.profileClient);
           settings.remove(settingsKeys.profileCallBackNumber);
         }
+
+        settings.save(settingsKeys.lastLoggedUsername, data.username);
 
         if (_.isFunction(callback)) {
           return callback(null, {accessToken: accessToken});
