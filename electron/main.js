@@ -65,7 +65,6 @@ $(document).ready(function() {
         console.log("textStatus: ", textStatus);
         console.log("errorThrow: ", errorThrow);
         alert('Your access is invalid');
-        hideLoader();
       }
     });
   }
@@ -115,6 +114,7 @@ $(document).ready(function() {
     };
 
     async.auto(tasks, function(err, results) {
+      hideLoader();
       if (err) {
         console.log("err: ", err);
         return;
