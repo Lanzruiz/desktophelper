@@ -45,7 +45,7 @@ $(document).ready(function() {
             "createdOn": ticket.sys_created_on,
             "state": ticket.state,
             "sysId": ticket.sys_id,
-            "actionOff": "<td data-ticket-number='" + ticket.number + "'><i class='fa fa-power-off action-off' data-ticket-sys-id='" + ticket.sys_id + "' data-ticket-number='" + ticket.number + "' aria-hidden='true'><p class='action-off' data-ticket-number='" + ticket.number + "' style='font-size:0px'>service</p></i></td>",
+            "actionOff": "<td data-ticket-number='" + ticket.number + "'><img src='"+ __dirname +"/assets/img/servicenow.png' class='servicedesk-icon action-off' data-ticket-sys-id='" + ticket.sys_id + "' data-ticket-number='" + ticket.number + "' aria-hidden='true'><p class='action-off' data-ticket-number='" + ticket.number + "' style='font-size:0px'>service</p></td>",
             "actionView": "<td data-ticket-number='" + ticket.number + "'><i class='fa fa-server action-view' data-ticket-number='"+ticket.number+"'  data-ticket-sys-id='" + ticket.sys_id + "' aria-hidden='true'><p style='font-size:0px' for='modal__trigger' class='action-view' data-ticket-number='"+ticket.number+"'>db</p></i></td>"
           };
 
