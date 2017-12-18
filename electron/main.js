@@ -1,5 +1,6 @@
 const {remote, ipcRenderer, session} = require('electron')
 const _ = require('lodash');
+const async = require("async");
 
 const settings = require("./settings");
 const settingsKeys = settings.settingsKeys;
@@ -13,67 +14,113 @@ console.log("endpoints: ", endpoints);
 
 let accessToken;
 
-function login(e){
-  let data = {
-    username: $('#username').val(),
-    password: $('#password').val()
-  };
 
-  console.log(data);
+$(document).ready(function() {
 
-  $.ajax({
-    type: "POST",
-    dataType: "json",
-    url: url + endpoints.tokens,
-    headers: {
-      'Authorization': secret,
-      'Content-Type': "application/json"
-    },
-    data: JSON.stringify(data),
-    success: function(result) {
-      console.log(result);
-      accessToken = result.access_token;
-      settings.save(settingsKeys.accessToken, accessToken);
+  function showLoader() {
+    $('#login').hide();
+    $('#loader').css("display", "block");
+  }
 
-      // role
-      $.ajax({
-        type: "GET",
-        dataType: "json",
-        url: url + endpoints.users,
-        headers: {
-          'Authorization': "Bearer " + accessToken,
-          'Content-Type': "application/json"
-        },
-        data: JSON.stringify(data),
-        success: function(result, textstatus, xhr) {
-          console.log(result);
+  function hideLoader() {
+    $('#loader').hide();
+    $('#login').show();
+  }
 
-          let lastLoggedUsername = settings.read(settingsKeys.lastLoggedUsername);
-          if (lastLoggedUsername != data.username) {
-            settings.remove(settingsKeys.profileLocation);
-            settings.remove(settingsKeys.profileBusinessUnit);
-            settings.remove(settingsKeys.profileClient);
-            settings.remove(settingsKeys.profileCallBackNumber);
-          }
+  function getAccessToken(username, password, callback) {
+    let data = {
+      username: username,
+      password: password
+    };
 
-          settings.save(settingsKeys.lastLoggedUsername, data.username);
-          let firstName = _.get(result, "first_name", "");
-          settings.save(settingsKeys.firstName, firstName);
+    $.ajax({
+      type: "POST",
+      dataType: "json",
+      url: url + endpoints.tokens,
+      headers: {
+        'Authorization': secret,
+        'Content-Type': "application/json"
+      },
+      data: JSON.stringify(data),
+      success: function(result, textStatus, jqXHR) {
+        console.log(result);
+        accessToken = result.access_token;
+        settings.save(settingsKeys.accessToken, accessToken);
+        settings.save(settingsKeys.lastLoggedUsername, data.username);
 
-          if(result.is_service_desk == false) {
-            // ipcRenderer.send('agent');
-            settings.save(settingsKeys.userRole, "agent");
-          } else {
-            // ipcRenderer.send('service');
-            settings.save(settingsKeys.userRole, "service");
-          }
-
-          ipcRenderer.send('profile');
+        let lastLoggedUsername = settings.read(settingsKeys.lastLoggedUsername);
+        if (lastLoggedUsername != data.username) {
+          settings.remove(settingsKeys.profileLocation);
+          settings.remove(settingsKeys.profileBusinessUnit);
+          settings.remove(settingsKeys.profileClient);
+          settings.remove(settingsKeys.profileCallBackNumber);
         }
-      });
-    },
-    error: function() {
-      alert('Your access is invalid');
-    }
+
+        if (_.isFunction(callback)) {
+          return callback(null, {accessToken: accessToken});
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrow) {
+        console.log("jqXHR: ", jqXHR);
+        console.log("textStatus: ", textStatus);
+        console.log("errorThrow: ", errorThrow);
+        alert('Your access is invalid');
+        hideLoader();
+      }
+    });
+  }
+
+  function getUserRole(accessToken, callback) {
+    $.ajax({
+      type: "GET",
+      dataType: "json",
+      url: url + endpoints.users,
+      headers: {
+        'Authorization': "Bearer " + accessToken,
+        'Content-Type': "application/json"
+      },
+      success: function(result, textStatus, jqXHR) {
+        console.log(result);
+        let firstName = _.get(result, "first_name", "");
+        settings.save(settingsKeys.firstName, firstName);
+
+        if(result.is_service_desk == false) {
+          settings.save(settingsKeys.userRole, "agent");
+        } else {
+          settings.save(settingsKeys.userRole, "service");
+        }
+
+        if (_.isFunction(callback)) {
+          return callback(null, {userRole: settings.read(settingsKeys.userRole)});
+        }
+      }
+    });
+  }
+
+  $('#login').click(function(e) {
+    showLoader();
+    let username = $('#username').val();
+    let password = $('#password').val();
+
+    let tasks = {
+      taskGetAccessToken: function(next) {
+        getAccessToken(username, password, next);
+      },
+
+      taskGetUserRole: ["taskGetAccessToken", function(results, next) {
+        let accessToken = _.get(results.taskGetAccessToken, "accessToken", "");
+
+        getUserRole(accessToken, next);
+      }]
+    };
+
+    async.auto(tasks, function(err, results) {
+      if (err) {
+        console.log("err: ", err);
+        return;
+      }
+
+      ipcRenderer.send('profile');
+    });
   });
-}
+});
