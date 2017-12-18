@@ -41,8 +41,8 @@ app.on('ready', function () {
         mainWindow.focus();
     }
     return true;
-});
-if(iShouldQuit){app.quit();return;}
+  });
+  if(iShouldQuit){app.quit();return;}
 
   function showAgentWindow() {
     agentWindow = new BrowserWindow({
