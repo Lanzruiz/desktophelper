@@ -65,6 +65,9 @@ $(document).ready(function() {
         console.log("textStatus: ", textStatus);
         console.log("errorThrow: ", errorThrow);
         alert('Your access is invalid');
+        if (_.isFunction(callback)) {
+          return callback(jqXHR);
+        }
       }
     });
   }
@@ -91,6 +94,11 @@ $(document).ready(function() {
 
         if (_.isFunction(callback)) {
           return callback(null, {userRole: settings.read(settingsKeys.userRole)});
+        }
+      },
+      error: function(jqXHR, textStatus, errorThrow) {
+        if (_.isFunction(callback)) {
+          return callback(jqXHR);
         }
       }
     });
