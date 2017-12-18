@@ -9,6 +9,7 @@ const settingsKeys = settings.settingsKeys;
 const _ = require('lodash');
 const async = require('async');
 const moment = require('moment');
+const toastr = require('toastr');
 
 /**  P R O F I L E  **/
 const profileLocation = settings.read(settingsKeys.profileLocation);
@@ -46,6 +47,13 @@ const ticketStateNames = {
 
 const descriptionCharacterLimit = 160;
 const allowedDescriptionKeys = [8, 9, 16, 17, 18, 19, 20, 27, 33, 34, 35, 36, 37, 38, 39, 40, 45, 46, 144, 145];
+
+toastr.options = {
+  extendedTimeOut: 0,
+  positionClass: "toast-top-center",
+  preventDuplicates: false,
+  timeOut: 0
+};
 
 $(document).ready(function() {
   let userTickets = [];
@@ -651,9 +659,12 @@ $(document).ready(function() {
         data: JSON.stringify(data),
         success: function(result, textStatus, jqXHR) {
           let ticketItem = formatTicket(result);
+          let ticketNumber = _.get(result, "number", "");
+
           userTickets.unshift(ticketItem);
           performSearch('');
           resetIncidentForm();
+          toastr.success(ticketNumber + " has been successfully created.");
         }
       });
     });
