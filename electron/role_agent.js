@@ -261,9 +261,8 @@ $(document).ready(function() {
     currentSearchValue = "";
     currentFilter = "";
     $('#description').val('');
-    $('#ticket_status').prop('selected', function() {
-      return this.defaultSelected;
-    });
+    $('#ticket_status').get(0).selectedIndex = 0;
+    $('#character_count').val("");
     toggleSubmitButton();
   }
 
@@ -730,9 +729,9 @@ $(document).ready(function() {
         e.preventDefault();
         e.stopPropagation();
       }
-
-      $('#character_count').html($(this).val().length);
     }
+
+    $('#character_count').html($(this).val().length);
   }));
 
   $('#submit_report_btn').click(function(e) {
