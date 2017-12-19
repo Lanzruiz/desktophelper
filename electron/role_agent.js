@@ -30,6 +30,7 @@ const getTicketsQueryParams = 'fields=number,sys_id,incident_state,sys_created_o
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 const pageSize = 4;
+const paginationSize = 5;
 const processesCount = 100;
 const timezoneOffset = new Date().getTimezoneOffset();
 
@@ -58,16 +59,112 @@ toastr.options = {
 $(document).ready(function() {
   let userTickets = [];
   let currentTicketsList = [];
+  let currentSearchValue = "";
+  let currentFilter = "";
 
   function showTicketsPagination(count, pageNumber) {
     pageNumber = parseInt(pageNumber);
     let numberOfPages = Math.ceil( (count / pageSize) );
+    if (pageNumber < 1) {
+      pageNumber = 1;
+    }
+    else if (pageNumber > numberOfPages) {
+      pageNumber = numberOfPages;
+    }
+
+    console.log("count: ", count);
+    console.log("numberOfPages: ", numberOfPages);
+    console.log("pageNumber: ", pageNumber);
 
     let paginationContent = '';
+    /*
     if (pageNumber > 1) {
       paginationContent += '<li class="page-item"><a data-page="' + (pageNumber - 1) + '" class="page-link">Previous</a></li>';
     }
+    */
 
+    if (numberOfPages <= paginationSize) {
+      for (let page = 1; page <= numberOfPages; ++page) {
+        paginationContent += '<li class="page-item"><a data-page="' + page + '" class="page-link';
+
+        if (page == pageNumber) {
+          paginationContent += ' active';
+        }
+
+        paginationContent += '">' + page + '</a></li>';
+      }
+    }
+    else {
+      if (pageNumber > paginationSize) {
+        paginationContent += '<li class="page-item"><a data-page="1" class="page-link">1</a></li>';
+        paginationContent += '<li class="page-item"><a>...</a></li>';
+
+        if (pageNumber > (numberOfPages - paginationSize)) {
+          let page = (numberOfPages - paginationSize);
+          if (page < 1) {
+            page = 1;
+          }
+
+          for (; page <= numberOfPages; ++page) {
+            paginationContent += '<li class="page-item"><a data-page="' + page + '" class="page-link';
+
+            if (page == pageNumber) {
+              paginationContent += ' active';
+            }
+
+            paginationContent += '">' + page + '</a></li>';
+          }
+        }
+        else {
+          let page = pageNumber - 2;
+          for (let i = 0; i < paginationSize; ++i) {
+            if (page >= numberOfPages) {
+              break;
+            }
+
+            paginationContent += '<li class="page-item"><a data-page="' + page + '" class="page-link';
+
+            if (page == pageNumber) {
+              paginationContent += ' active';
+            }
+
+            paginationContent += '">' + page + '</a></li>';
+            ++page;
+          }
+
+          // if (paginationSize < numberOfPages) {
+            if (pageNumber <= (numberOfPages - paginationSize)) {
+              paginationContent += '<li class="page-item"><a>...</a></li>';
+              paginationContent += '<li class="page-item"><a data-page="' + numberOfPages + '" class="page-link">' + numberOfPages + '</a></li>';
+            }
+            else {
+              let page = pageNumber + 2;
+              let remainingCount = numberOfPages - page;
+              for (let i = 0; i < remainingCount; ++i) {
+                paginationContent += '<li class="page-item"><a data-page="' + page + '" class="page-link">' + page + '</a></li>';
+                ++page;
+              }
+            }
+          // }
+        }
+      }
+      else {
+        for (let i = 0; i <= paginationSize; ++i) {
+          paginationContent += '<li class="page-item"><a data-page="' + (i+1) + '" class="page-link';
+
+          if ((i+1) == pageNumber) {
+            paginationContent += ' active';
+          }
+
+          paginationContent += '">' + (i + 1) + '</a></li>';
+        }
+
+        paginationContent += '<li class="page-item"><a>...</a></li>';
+        paginationContent += '<li class="page-item"><a data-page="' + numberOfPages + '" class="page-link">' + numberOfPages + '</a></li>';
+      }
+    }
+
+    /*
     for (let i = 0; i < numberOfPages; ++i) {
       paginationContent += '<li class="page-item"><a data-page="' + (i+1) + '" class="page-link';
 
@@ -81,11 +178,13 @@ $(document).ready(function() {
     if (pageNumber < numberOfPages) {
       paginationContent += '<li class="page-item"><a data-page="' + (pageNumber + 1) + '"  class="page-link">Next</a></li>';
     }
+    */
 
     $('#tickets_pagination').html(paginationContent);
   }
 
   function formatTicket(ticket) {
+    let incidentState = _.get(ticket, "incident_state", "");
     let shortDescription = _.get(ticket, "short_description", "<i>No short description</i>");
     let shortDescriptionParts = shortDescription.split(' ');
     let excerpt = shortDescriptionParts.splice(0, 4).join(' ');
@@ -96,7 +195,7 @@ $(document).ready(function() {
     let ticketHeadingContent = '<strong>'
       + excerpt
       + '<span class="badge float-right">'
-      + _.get(ticketStateNames, ticket.incident_state, "")
+      + _.get(ticketStateNames, incidentState, "")
       + '</span>'
       + '</strong>';
 
@@ -121,6 +220,7 @@ $(document).ready(function() {
 
     let ticketItem = {
       "incidentNumber": _.get(ticket, "number", ""),
+      "incidentState": incidentState,
       "htmlContent": listGroupItemContent
     };
 
@@ -206,23 +306,34 @@ $(document).ready(function() {
     });
   }
 
-  function performSearch(searchValue) {
-    if (!searchValue || searchValue.length == 0) {
-      console.log("empty search value");
-      console.log("userTickets: ", userTickets);
-      currentTicketsList = userTickets;
+  function performSearch(searchValue, filterValue) {
+    currentSearchValue = searchValue;
+    currentFilter = filterValue;
+    console.log("currentSearchValue: ", currentSearchValue);
+    console.log("currentFilter: ", currentFilter);
+
+    if (!currentSearchValue || currentSearchValue.length == 0) {
+      currentTicketsList = _.clone(userTickets);
+      if (currentFilter) {
+        currentTicketsList = _.filter(currentTicketsList, {"incidentState": currentFilter});
+      }
+
       showTickets(0, pageSize);
       showTicketsPagination(currentTicketsList.length, 1);
       return;
     }
 
-    searchTickets(searchValue);
+    searchTickets(currentSearchValue, currentFilter);
   }
 
-  function searchTickets(incidentNumber) {
+  function searchTickets(incidentNumber, incidentState) {
     currentTicketsList = _.filter(userTickets, function(ticket) {
       return _.startsWith(ticket.incidentNumber, incidentNumber);
     });
+
+    if (incidentState) {
+      currentTicketsList = _.filter(currentTicketsList, {"incidentState": incidentState});
+    }
 
     let ticketsCount = currentTicketsList.length;
     showTicketsPagination(ticketsCount, 1);
@@ -243,7 +354,11 @@ $(document).ready(function() {
   }
 
   function resetIncidentForm() {
+    currentSearchValue = "";
+    currentFilter = "";
     $('#description').val('');
+    $('#ticket_status').get(0).selectedIndex = 0;
+    $('#character_count').val("");
     toggleSubmitButton();
   }
 
@@ -662,12 +777,17 @@ $(document).ready(function() {
           let ticketNumber = _.get(result, "number", "");
 
           userTickets.unshift(ticketItem);
-          performSearch('');
           resetIncidentForm();
+          performSearch(currentSearchValue, currentFilter);
           toastr.success(ticketNumber + " has been successfully created.");
         }
       });
     });
+  }
+
+  function init() {
+    $('#firstname').html(firstname);
+    getTickets();
   }
 
 
@@ -688,12 +808,12 @@ $(document).ready(function() {
   $('#search').keypress(function(e) {
     let key = e.which;
     if (key == 13) {
-      performSearch(_.trim($('#search').val()));
+      performSearch(_.trim($('#search').val()), currentFilter);
     }
   });
 
   $('#search_btn').click(function(e) {
-    performSearch(_.trim($('#search').val()));
+    performSearch(_.trim($('#search').val()), currentFilter);
   });
 
   $('#description').on('keydown keyup', (function(e) {
@@ -701,10 +821,13 @@ $(document).ready(function() {
       let descriptionContent = $(this).val();
       if (descriptionContent.length >= descriptionCharacterLimit) {
         $(this).val($(this).val().substring(0, descriptionCharacterLimit));
+        $('#character_count').html($(this).val().length);
         e.preventDefault();
         e.stopPropagation();
       }
     }
+
+    $('#character_count').html($(this).val().length);
   }));
 
   $('#submit_report_btn').click(function(e) {
@@ -719,7 +842,12 @@ $(document).ready(function() {
     ipcRenderer.send('logout-agent');
   });
 
-  $('#firstname').html(firstname);
-  getTickets();
+  $('#ticket_status').change(function() {
+    let incidentState = $(this).val();
+    currentFilter = incidentState;
+    performSearch(currentSearchValue, incidentState);
+  });
+
+  init();
 });
 

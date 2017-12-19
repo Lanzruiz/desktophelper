@@ -47,7 +47,7 @@ if(iShouldQuit){app.quit();return;}
   function showAgentWindow() {
     agentWindow = new BrowserWindow({
       width: 900,
-      height: 500,
+      height: 530,
       show: false,
       frame: config.browserWindows.frame
     });
@@ -88,7 +88,6 @@ if(iShouldQuit){app.quit();return;}
   mainWindow.setResizable(false);
 
   ipcMain.on('profile', function() {
-    console.log("profile!");
     profileWindow = new BrowserWindow({
       width: 350,
       height: 550,
