@@ -3,11 +3,26 @@ const settingsKeys = settings.settingsKeys;
 
 const {ipcRenderer, shell} = require('electron')
 const _ = require('lodash');
+const moment = require('moment');
 
 const url = settings.read(settingsKeys.helpMeUrl);
 const endpoints = settings.read(settingsKeys.helpMeEndpoints);
 const accessToken = settings.read(settingsKeys.accessToken);
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
+
+const timezoneOffset = new Date().getTimezoneOffset();
+
+const ticketStateNames = {
+  "1": "New",
+  "2": "Active",
+  "3": "Awaiting Problem",
+  "4": "Awaiting User Info",
+  "5": "Awaiting Evidence",
+  "6": "Resolved",
+  "7": "Closed",
+  "8": "Awaiting Vendor",
+  "9": "Reopened"
+};
 
 let allTickets = [];
 
@@ -37,13 +52,19 @@ $(document).ready(function() {
         console.log('tickets: ', tickets);
 
         _.forEach(tickets, function(ticket) {
+          let createdOn = _.get(ticket, "sys_created_on", moment().format('YYYY-MM-DD HH:mm:ss').toString());
+          let createdOnWithOffset = createdOn.split(' ').join('T') + '+00';
+          createdOn = moment(createdOnWithOffset).utcOffset(timezoneOffset).format('YYYY-MM-DD HH:mm:ss').toString();
+
+          let incidentState = _.get(ticketStateNames, _.get(ticket, "incident_state", ""), "");
+
           let data = {
             "number": ticket.number,
             "shortDescription": ticket.short_description,
             "description": ticket.description,
             "createdBy": ticket.sys_created_by,
-            "createdOn": ticket.sys_created_on,
-            "state": ticket.state,
+            "createdOn": createdOn,
+            "state": incidentState,
             "sysId": ticket.sys_id,
             "actionOff": "<td data-ticket-number='" + ticket.number + "'><img src='"+ __dirname +"/assets/img/servicenow.png' class='servicedesk-icon action-off' data-ticket-sys-id='" + ticket.sys_id + "' data-ticket-number='" + ticket.number + "' aria-hidden='true'><p class='action-off' data-ticket-number='" + ticket.number + "' style='font-size:0px'>service</p></td>",
             "actionView": "<td data-ticket-number='" + ticket.number + "'><i class='fa fa-server action-view' data-ticket-number='"+ticket.number+"'  data-ticket-sys-id='" + ticket.sys_id + "' aria-hidden='true'><p style='font-size:0px' for='modal__trigger' class='action-view' data-ticket-number='"+ticket.number+"'>db</p></i></td>"
@@ -57,14 +78,26 @@ $(document).ready(function() {
         $('#tickets').DataTable({
           data: allTickets,
           columns: [
-            {data: 'number', orderable: false},
-            {data: 'shortDescription', orderable: false},
-            {data: 'createdBy', orderable: false},
-            {data: 'createdOn', orderable: false},
-            {data: 'state', orderable: false},
-            {data: 'actionOff', orderable: false},
-            {data: 'actionView', orderable: false}
+            {data: 'number', orderable: false, width: "15%"},
+            {data: 'shortDescription', orderable: false, width: "25%"},
+            {data: 'createdBy', orderable: false, width: "15%"},
+            {data: 'createdOn', orderable: false, width: "20%"},
+            {data: 'state', orderable: false, width: "15%"},
+            {data: 'actionOff', orderable: false, width: "5%"},
+            {data: 'actionView', orderable: false, width: "5%"}
           ],
+          // columnDefs: [
+          //   {
+          //     render: function(data, type, full, meta) {
+          //       if (data.length > 50) {
+          //         return "<div class='text-wrap width-25percent'>" + data + "</div>";
+          //       }
+          //
+          //       return "<div class='text-wrap width-100percent'>" + data + "</div>";
+          //     },
+          //     targets: 1
+          //   }
+          // ],
           order: [[0, "desc"]]
         });
 
