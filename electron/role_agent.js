@@ -726,9 +726,12 @@ $(document).ready(function() {
       let descriptionContent = $(this).val();
       if (descriptionContent.length >= descriptionCharacterLimit) {
         $(this).val($(this).val().substring(0, descriptionCharacterLimit));
+        $('#character_count').html($(this).val().length);
         e.preventDefault();
         e.stopPropagation();
       }
+
+      $('#character_count').html($(this).val().length);
     }
   }));
 
