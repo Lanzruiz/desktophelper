@@ -30,6 +30,7 @@ const getTicketsQueryParams = 'fields=number,sys_id,incident_state,sys_created_o
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
 const pageSize = 4;
+const paginationSize = 5;
 const processesCount = 100;
 const timezoneOffset = new Date().getTimezoneOffset();
 
@@ -64,12 +65,106 @@ $(document).ready(function() {
   function showTicketsPagination(count, pageNumber) {
     pageNumber = parseInt(pageNumber);
     let numberOfPages = Math.ceil( (count / pageSize) );
+    if (pageNumber < 1) {
+      pageNumber = 1;
+    }
+    else if (pageNumber > numberOfPages) {
+      pageNumber = numberOfPages;
+    }
+
+    console.log("count: ", count);
+    console.log("numberOfPages: ", numberOfPages);
+    console.log("pageNumber: ", pageNumber);
 
     let paginationContent = '';
+    /*
     if (pageNumber > 1) {
       paginationContent += '<li class="page-item"><a data-page="' + (pageNumber - 1) + '" class="page-link">Previous</a></li>';
     }
+    */
 
+    if (numberOfPages <= paginationSize) {
+      for (let page = 1; page <= numberOfPages; ++page) {
+        paginationContent += '<li class="page-item"><a data-page="' + page + '" class="page-link';
+
+        if (page == pageNumber) {
+          paginationContent += ' active';
+        }
+
+        paginationContent += '">' + page + '</a></li>';
+      }
+    }
+    else {
+      if (pageNumber > paginationSize) {
+        paginationContent += '<li class="page-item"><a data-page="1" class="page-link">1</a></li>';
+        paginationContent += '<li class="page-item"><a>...</a></li>';
+
+        if (pageNumber > (numberOfPages - paginationSize)) {
+          let page = (numberOfPages - paginationSize);
+          if (page < 1) {
+            page = 1;
+          }
+
+          for (; page <= numberOfPages; ++page) {
+            paginationContent += '<li class="page-item"><a data-page="' + page + '" class="page-link';
+
+            if (page == pageNumber) {
+              paginationContent += ' active';
+            }
+
+            paginationContent += '">' + page + '</a></li>';
+          }
+        }
+        else {
+          let page = pageNumber - 2;
+          for (let i = 0; i < paginationSize; ++i) {
+            if (page >= numberOfPages) {
+              break;
+            }
+
+            paginationContent += '<li class="page-item"><a data-page="' + page + '" class="page-link';
+
+            if (page == pageNumber) {
+              paginationContent += ' active';
+            }
+
+            paginationContent += '">' + page + '</a></li>';
+            ++page;
+          }
+
+          // if (paginationSize < numberOfPages) {
+            if (pageNumber <= (numberOfPages - paginationSize)) {
+              paginationContent += '<li class="page-item"><a>...</a></li>';
+              paginationContent += '<li class="page-item"><a data-page="' + numberOfPages + '" class="page-link">' + numberOfPages + '</a></li>';
+            }
+            else {
+              let page = pageNumber + 2;
+              let remainingCount = numberOfPages - page;
+              for (let i = 0; i < remainingCount; ++i) {
+                paginationContent += '<li class="page-item"><a data-page="' + page + '" class="page-link">' + page + '</a></li>';
+                ++page;
+              }
+            }
+          // }
+        }
+      }
+      else {
+        for (let i = 0; i <= paginationSize; ++i) {
+          paginationContent += '<li class="page-item"><a data-page="' + (i+1) + '" class="page-link';
+
+          if ((i+1) == pageNumber) {
+            paginationContent += ' active';
+          }
+
+          paginationContent += '">' + (i + 1) + '</a></li>';
+        }
+
+        paginationContent += '<li class="page-item"><a>...</a></li>';
+        paginationContent += '<li class="page-item"><a data-page="' + numberOfPages + '" class="page-link">' + numberOfPages + '</a></li>';
+      }
+    }
+
+    /*
     for (let i = 0; i < numberOfPages; ++i) {
       paginationContent += '<li class="page-item"><a data-page="' + (i+1) + '" class="page-link';
 
@@ -83,6 +178,7 @@ $(document).ready(function() {
     if (pageNumber < numberOfPages) {
       paginationContent += '<li class="page-item"><a data-page="' + (pageNumber + 1) + '"  class="page-link">Next</a></li>';
     }
+    */
 
     $('#tickets_pagination').html(paginationContent);
   }
@@ -217,7 +313,7 @@ $(document).ready(function() {
     console.log("currentFilter: ", currentFilter);
 
     if (!currentSearchValue || currentSearchValue.length == 0) {
-      currentTicketsList = userTickets;
+      currentTicketsList = _.clone(userTickets);
       if (currentFilter) {
         currentTicketsList = _.filter(currentTicketsList, {"incidentState": currentFilter});
       }
@@ -681,8 +777,8 @@ $(document).ready(function() {
           let ticketNumber = _.get(result, "number", "");
 
           userTickets.unshift(ticketItem);
-          performSearch(currentSearchValue, currentFilter);
           resetIncidentForm();
+          performSearch(currentSearchValue, currentFilter);
           toastr.success(ticketNumber + " has been successfully created.");
         }
       });
