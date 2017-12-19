@@ -356,7 +356,8 @@ $(document).ready(function() {
   function resetIncidentForm() {
     currentSearchValue = "";
     currentFilter = "";
-    $('#description').val('');
+    $('#search').val("");
+    $('#description').val("");
     $('#ticket_status').get(0).selectedIndex = 0;
     $('#character_count').html("0");
     toggleSubmitButton();
