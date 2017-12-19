@@ -58,6 +58,8 @@ toastr.options = {
 $(document).ready(function() {
   let userTickets = [];
   let currentTicketsList = [];
+  let currentSearchValue = "";
+  let currentFilter = "";
 
   function showTicketsPagination(count, pageNumber) {
     pageNumber = parseInt(pageNumber);
@@ -86,6 +88,7 @@ $(document).ready(function() {
   }
 
   function formatTicket(ticket) {
+    let incidentState = _.get(ticket, "incident_state", "");
     let shortDescription = _.get(ticket, "short_description", "<i>No short description</i>");
     let shortDescriptionParts = shortDescription.split(' ');
     let excerpt = shortDescriptionParts.splice(0, 4).join(' ');
@@ -96,7 +99,7 @@ $(document).ready(function() {
     let ticketHeadingContent = '<strong>'
       + excerpt
       + '<span class="badge float-right">'
-      + _.get(ticketStateNames, ticket.incident_state, "")
+      + _.get(ticketStateNames, incidentState, "")
       + '</span>'
       + '</strong>';
 
@@ -121,6 +124,7 @@ $(document).ready(function() {
 
     let ticketItem = {
       "incidentNumber": _.get(ticket, "number", ""),
+      "incidentState": incidentState,
       "htmlContent": listGroupItemContent
     };
 
@@ -206,23 +210,34 @@ $(document).ready(function() {
     });
   }
 
-  function performSearch(searchValue) {
-    if (!searchValue || searchValue.length == 0) {
-      console.log("empty search value");
-      console.log("userTickets: ", userTickets);
+  function performSearch(searchValue, filterValue) {
+    currentSearchValue = searchValue;
+    currentFilter = filterValue;
+    console.log("currentSearchValue: ", currentSearchValue);
+    console.log("currentFilter: ", currentFilter);
+
+    if (!currentSearchValue || currentSearchValue.length == 0) {
       currentTicketsList = userTickets;
+      if (currentFilter) {
+        currentTicketsList = _.filter(currentTicketsList, {"incidentState": currentFilter});
+      }
+
       showTickets(0, pageSize);
       showTicketsPagination(currentTicketsList.length, 1);
       return;
     }
 
-    searchTickets(searchValue);
+    searchTickets(currentSearchValue, currentFilter);
   }
 
-  function searchTickets(incidentNumber) {
+  function searchTickets(incidentNumber, incidentState) {
     currentTicketsList = _.filter(userTickets, function(ticket) {
       return _.startsWith(ticket.incidentNumber, incidentNumber);
     });
+
+    if (incidentState) {
+      currentTicketsList = _.filter(currentTicketsList, {"incidentState": incidentState});
+    }
 
     let ticketsCount = currentTicketsList.length;
     showTicketsPagination(ticketsCount, 1);
@@ -243,7 +258,12 @@ $(document).ready(function() {
   }
 
   function resetIncidentForm() {
+    currentSearchValue = "";
+    currentFilter = "";
     $('#description').val('');
+    $('#ticket_status').prop('selected', function() {
+      return this.defaultSelected;
+    });
     toggleSubmitButton();
   }
 
@@ -662,12 +682,17 @@ $(document).ready(function() {
           let ticketNumber = _.get(result, "number", "");
 
           userTickets.unshift(ticketItem);
-          performSearch('');
+          performSearch(currentSearchValue, currentFilter);
           resetIncidentForm();
           toastr.success(ticketNumber + " has been successfully created.");
         }
       });
     });
+  }
+
+  function init() {
+    $('#firstname').html(firstname);
+    getTickets();
   }
 
 
@@ -688,12 +713,12 @@ $(document).ready(function() {
   $('#search').keypress(function(e) {
     let key = e.which;
     if (key == 13) {
-      performSearch(_.trim($('#search').val()));
+      performSearch(_.trim($('#search').val()), currentFilter);
     }
   });
 
   $('#search_btn').click(function(e) {
-    performSearch(_.trim($('#search').val()));
+    performSearch(_.trim($('#search').val()), currentFilter);
   });
 
   $('#description').on('keydown keyup', (function(e) {
@@ -719,7 +744,12 @@ $(document).ready(function() {
     ipcRenderer.send('logout-agent');
   });
 
-  $('#firstname').html(firstname);
-  getTickets();
+  $('#ticket_status').change(function() {
+    let incidentState = $(this).val();
+    currentFilter = incidentState;
+    performSearch(currentSearchValue, incidentState);
+  });
+
+  init();
 });
 
