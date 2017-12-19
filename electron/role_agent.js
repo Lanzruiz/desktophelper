@@ -831,6 +831,14 @@ $(document).ready(function() {
   }));
 
   $('#submit_report_btn').click(function(e) {
+    let description = _.trim($('#description').val());
+    if (!description) {
+      toastr.error("Please indicate your ticket description.");
+      $('#description').addClass("has-error");
+      return;
+    }
+
+    $('#description').removeClass("has-error");
     let confirmResult = confirm('Are you sure you want to submit this incident?');
     if (confirmResult == true) {
       toggleSubmitButton();
