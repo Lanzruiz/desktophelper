@@ -358,7 +358,7 @@ $(document).ready(function() {
     currentFilter = "";
     $('#description').val('');
     $('#ticket_status').get(0).selectedIndex = 0;
-    $('#character_count').val("");
+    $('#character_count').html("0");
     toggleSubmitButton();
   }
 
