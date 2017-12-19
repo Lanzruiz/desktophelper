@@ -47,7 +47,7 @@ if(iShouldQuit){app.quit();return;}
   function showAgentWindow() {
     agentWindow = new BrowserWindow({
       width: 900,
-      height: 530,
+      height: 480,
       show: false,
       frame: config.browserWindows.frame
     });
