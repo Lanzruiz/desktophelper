@@ -17,6 +17,18 @@ let accessToken;
 
 $(document).ready(function() {
 
+
+  $("#login").prop("disabled", "disabled");
+
+  $("#username").on("keyup", function () {
+      if ($(this).val() != "") {
+        $("#login").prop("disabled", false);
+      } else {
+        $("#login").prop("disabled", "disabled");
+      }
+  });
+
+
   function showLoader() {
     $('#login').hide();
     $('#loader').css("display", "block");
