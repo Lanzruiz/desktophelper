@@ -124,10 +124,15 @@ if(iShouldQuit){app.quit();return;}
       width: 900,
       height: 600,
       show: false,
-      frame: config.browserWindows.frame
+      frame: config.browserWindows.frame,
+      parent: serviceWindow,
+      modal: true
     })
     detailsWindow.loadURL('file://' + __dirname + '/ticket_details.html');
-    detailsWindow.show();
+    detailsWindow.once('ready-to-show', () => {
+      detailsWindow.show();
+    });
+
     /*
     detailsWindow.webContents.on('found-in-page', (event, result) => {
       if (result.finalUpdate) {
@@ -175,6 +180,8 @@ if(iShouldQuit){app.quit();return;}
       detailsWindow.close();
       detailsWindow = null;
     }
+
+    serviceWindow.show();
   });
 
   ipcMain.on('search-in-details', (event, arg) => {
