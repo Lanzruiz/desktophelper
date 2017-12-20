@@ -107,7 +107,7 @@ $(document).ready(function() {
     });
   }
 
-  $('#login').click(function(e) {
+  function login() {
     showLoader();
     let username = $('#username').val();
     let password = $('#password').val();
@@ -133,5 +133,16 @@ $(document).ready(function() {
 
       ipcRenderer.send('profile');
     });
+  }
+
+  $('#login').click(function(e) {
+    login();
   });
+
+  $('#username, #password').keyup(function(e) {
+    if (e.keyCode == 13) {
+      login();
+    }
+  });
+
 });
