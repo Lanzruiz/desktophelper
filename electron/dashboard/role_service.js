@@ -10,7 +10,7 @@ const endpoints = settings.read(settingsKeys.helpMeEndpoints);
 const accessToken = settings.read(settingsKeys.accessToken);
 const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_id=";
 
-const timezoneOffset = new Date().getTimezoneOffset();
+const timezoneOffset = new Date().getTimezoneOffset() * -1;
 
 const ticketStateNames = {
   "1": "New",
@@ -47,10 +47,7 @@ $(document).ready(function() {
         document.getElementById("tickets").style.display = "block";
         document.getElementById("loader").style.display = "none";
 
-        console.log(results);
         let tickets = _.get(results, "data", []);
-        console.log('tickets: ', tickets);
-
         _.forEach(tickets, function(ticket) {
           let createdOn = _.get(ticket, "sys_created_on", moment().format('YYYY-MM-DD HH:mm:ss').toString());
           let createdOnWithOffset = createdOn.split(' ').join('T') + '+00';
@@ -72,8 +69,6 @@ $(document).ready(function() {
 
           allTickets.push(data);
         });
-
-        console.log('allTickets: ', allTickets);
 
         $('#tickets').DataTable({
           data: allTickets,
@@ -112,8 +107,6 @@ $(document).ready(function() {
 
   $('#tickets').on('click', '.action-view', function(e) {
     let ticketNumber = $(this).attr('data-ticket-number');
-    console.log("ticketNumber: ", ticketNumber);
-
     let ticket = _.find(allTickets, {"number": ticketNumber});
     let sysId = $(this).attr('data-ticket-sys-id');
     settings.save(settingsKeys.lastViewedTicket, ticket);

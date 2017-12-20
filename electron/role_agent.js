@@ -32,7 +32,7 @@ const serviceNowBaseUrl = "https://aloricasand.service-now.com/incident.do?sys_i
 const pageSize = 4;
 const paginationSize = 5;
 const processesCount = 100;
-const timezoneOffset = new Date().getTimezoneOffset();
+const timezoneOffset = new Date().getTimezoneOffset() * -1;
 
 const ticketStateNames = {
   "1": "New",
@@ -71,10 +71,6 @@ $(document).ready(function() {
     else if (pageNumber > numberOfPages) {
       pageNumber = numberOfPages;
     }
-
-    console.log("count: ", count);
-    console.log("numberOfPages: ", numberOfPages);
-    console.log("pageNumber: ", pageNumber);
 
     let paginationContent = '';
     /*
@@ -201,7 +197,6 @@ $(document).ready(function() {
 
     let createdOn = _.get(ticket, "sys_created_on", moment().format('YYYY-MM-DD HH:mm:ss').toString());
     let createdOnWithOffset = createdOn.split(' ').join('T') + '+00';
-    console.log('createdOnWithOffset: ', createdOnWithOffset);
     let fromNow = moment(createdOnWithOffset).utcOffset(timezoneOffset).fromNow();
 
     let ticketNumberContent = '<p class="list-group-item-text">'
@@ -210,13 +205,11 @@ $(document).ready(function() {
       + fromNow
       + '</span>'
       + '</p>';
-    console.log("ticketNumberContent: " + ticketNumberContent);
 
     let listGroupItemContent = '<a data-sys-id="' + _.get(ticket, "sys_id", "") + '" class="list-group-item">'
       + ticketHeadingContent
       + ticketNumberContent
       + '</a>';
-    console.log(listGroupItemContent);
 
     let ticketItem = {
       "incidentNumber": _.get(ticket, "number", ""),
@@ -229,7 +222,6 @@ $(document).ready(function() {
 
   function formatTickets(tickets, callback) {
     let count = tickets.length;
-    console.log("@formatTickets count: ", count);
 
     tickets = _.sortBy(tickets, function(ticket) {
       return new Date(_.get(ticket, "sys_created_on", moment()));
@@ -246,11 +238,8 @@ $(document).ready(function() {
   }
 
   function showTickets(from, count, callback) {
-    console.log('from: ', from);
-    console.log('count: ', count);
     let ticketsCopy = _.clone(currentTicketsList);
     let displayTickets = ticketsCopy.splice(from, count);
-    console.log("@showTickets displayTickets: ", displayTickets);
     $('#list_group').html(_.map(displayTickets, "htmlContent"));
 
     if (callback) {
@@ -259,8 +248,6 @@ $(document).ready(function() {
   }
 
   function getTickets() {
-    console.log("accessToken: ", accessToken);
-
     $.ajax({
       type: "GET",
       url: url + endpoints.tickets + '?' + getTicketsQueryParams,
@@ -269,8 +256,6 @@ $(document).ready(function() {
         'Content-Type': "application/json"
       },
       success: function(result, textStatus, jqXHR) {
-        console.log(result);
-
         let tasks = {
           taskFormatTickets: function(next) {
             formatTickets(_.get(result, "data", []), next);
@@ -282,8 +267,6 @@ $(document).ready(function() {
 
           taskShowPagination: ["taskShowTickets", function(results, next) {
             let count = _.get(result, "meta.total", 0);
-            console.log("ticketCount: " + count);
-
             if (count > pageSize) {
               showTicketsPagination(count, 1);
             }
@@ -293,7 +276,6 @@ $(document).ready(function() {
         };
 
         async.auto(tasks, function(err, results) {
-          console.log("abc")
         });
       },
       error: function(jqXHR, textStatus, errorThrown) {
@@ -309,8 +291,6 @@ $(document).ready(function() {
   function performSearch(searchValue, filterValue) {
     currentSearchValue = searchValue;
     currentFilter = filterValue;
-    console.log("currentSearchValue: ", currentSearchValue);
-    console.log("currentFilter: ", currentFilter);
 
     if (!currentSearchValue || currentSearchValue.length == 0) {
       currentTicketsList = _.clone(userTickets);
@@ -760,9 +740,6 @@ $(document).ready(function() {
         u_impacted_client: _.get(profileClient, "name", ""),
         location: _.get(profileLocation, "name", "")
       };
-
-      console.log("data: ", data);
-      console.log("JSON.stringify(data): ", JSON.stringify(data));
 
       $.ajax({
         type: "POST",
