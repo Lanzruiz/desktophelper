@@ -227,13 +227,12 @@ if(iShouldQuit){app.quit();return;}
       profileWindow = null;
     }
 
-    if (userRole == "agent") {
-      showAgentWindow();
-    }
-    else if (userRole == "service") {
-      showServiceDeskWindow();
-    }
+    showAgentWindow();
+    mainWindow.hide();
+  });
 
+  ipcMain.on('show-service-window', (event, arg) => {
+    showServiceDeskWindow();
     mainWindow.hide();
   });
 

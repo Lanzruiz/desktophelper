@@ -143,7 +143,14 @@ $(document).ready(function() {
         return;
       }
 
-      ipcRenderer.send('profile');
+      let userRole = _.get(results.taskGetUserRole, "userRole", "");
+
+      if (userRole == "agent") {
+        ipcRenderer.send('profile');
+      }
+      else {
+        ipcRenderer.send('show-service-window');
+      }
     });
   }
 
