@@ -45,7 +45,8 @@
       "target": [
         "AppImage",
         "deb"
-      ]
+      ],
+      "icon": "build/icon.ico"
     },
     "nsis": {
       "perMachine": true
