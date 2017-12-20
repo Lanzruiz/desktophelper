@@ -1,19 +1,22 @@
 {
   "name": "HelpMe",
-  "version": "0.3.0",
+  "version": "0.3.4",
   "description": "helpme app",
+  "homepage": "http://alorica.com",
   "main": "app.js",
   "scripts": {
     "start": "electron .",
-    "dist": "build -w --x64 --ia32"
+    "pack": "build --dir",
+    "dist": "build -wl --x64 --ia32"
   },
-  "author": "Alorica GBS",
+  "author": "Alorica GBS <xyz@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "electron": "^1.7.9",
     "electron-builder": "^19.48.3",
     "electron-packager": "^10.1.0",
-    "electron-prebuilt": "^0.28.3"
+    "electron-prebuilt": "^0.28.3",
+    "http-server": "^0.9.0"
   },
   "dependencies": {
     "async": "^2.6.0",
@@ -22,7 +25,7 @@
     "datatables.net-dt": "^1.10.16",
     "electron-is-dev": "^0.3.0",
     "electron-localshortcut": "^2.0.2",
-    "electron-log": "^2.2.12",
+    "electron-log": "^2.2.13",
     "electron-store": "^1.3.0",
     "electron-updater": "^2.17.6",
     "jquery": "^3.2.1",
@@ -32,10 +35,20 @@
     "toastr": "^2.1.4"
   },
   "build": {
+    
     "appId": "com.alorica.helpme",
     "win": {
       "target": "nsis",
       "icon": "build/icon.ico"
+    },
+     "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "nsis": {
+      "perMachine": true
     }
   }
 }

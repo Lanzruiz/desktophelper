@@ -1,5 +1,13 @@
-const {app, Tray, BrowserWindow, ipcMain} = require('electron')
+const {app, Tray, BrowserWindow, Menu, protocol, ipcMain} = require('electron')
 const localShortcut = require('electron-localshortcut');
+
+/////////////// updater ////////////////////////////
+
+const log = require('electron-log');
+const {autoUpdater} = require("electron-updater");
+
+
+////////////// updater /////////////////////////////
 
 const config = require("./config");
 const {host, secret, endpoints} = config.api;
@@ -11,6 +19,16 @@ const path = require('path');
 
 const iconPath = path.join(__dirname, 'icon.png');
 let appIcon = null;
+
+///////////////////
+// Auto upadater //
+///////////////////
+
+
+
+///////////////////
+// Auto upadater //
+///////////////////
 
 function resetStore() {
   settings.save(settingsKeys.helpMeUrl, host);
