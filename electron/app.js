@@ -64,7 +64,7 @@ if(iShouldQuit){app.quit();return;}
       resizable: false,
       frame: config.browserWindows.frame
     });
-    serviceWindow.loadURL('file://' + __dirname + '/dashboard/servicedesk.html');
+    serviceWindow.loadURL('file://' + __dirname + '/role_service.html');
     serviceWindow.show();
   }
 
@@ -108,7 +108,7 @@ if(iShouldQuit){app.quit();return;}
       show: false,
       frame: config.browserWindows.frame
     })
-    detailsWindow.loadURL('file://' + __dirname + '/dashboard/modal.html');
+    detailsWindow.loadURL('file://' + __dirname + '/ticket_details.html');
     detailsWindow.show();
     /*
     detailsWindow.webContents.on('found-in-page', (event, result) => {
