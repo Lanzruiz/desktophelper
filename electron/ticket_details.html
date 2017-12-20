@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title id="ticket_title"></title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>window.$ = window.jQuery = require('jquery');</script>
+    <link rel="stylesheet" href="./assets/css/bootstrap.3.3.7.min.css">
+    <script src="./assets/js/jquery.3.2.1.min.js"></script>
+    <script src="./assets/js/bootstrap.3.3.7.min.js"></script>
+    <style>
+      a#close {
+        float: right;
+        cursor: pointer;
+      }
+      a#servicnow {
+        float: right;
+        margin-right: 20px;
+        cursor: pointer;
+      }
+
+      div#ticket-search-container {
+        display: none;
+      }
+    </style>
+  </head>
+<body>
+  <div class="container">
+    <h2 id="incident-number">Dynamic Tabs</h2>
+    <div id="ticket-search-container">
+      <label for="ticket-search">Search</label>
+      <input type="text" id="ticket-search" />
+    </div>
+
+    <a id="close">Close</a>
+    <a id="servicnow">Service Now</a>
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#home">Incident Summary</a></li>
+      <li><a href="#menu1">System Information</a></li>
+      <li><a href="#menu2">Running Process</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div id="home" class="tab-pane fade in active">
+        <h3 id="incident-header">HOME</h3>
+        <p id="incident-summary-content">Please wait...</p>
+      </div>
+      <div id="menu1" class="tab-pane fade">
+        <p id="incident-system-information">Please wait...</p>
+      </div>
+      <div id="menu2" class="tab-pane fade">
+        <p id="incident-running-processes">Please wait...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="./ticket_details.js"></script>
+
+  </body>
+</html>
