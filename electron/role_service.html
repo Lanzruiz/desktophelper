@@ -19,6 +19,7 @@
     <script src="./assets/js/jquery.3.2.1.min.js" type="text/javascript"></script>
     <script src="./assets/js/jquery.datatables.1.10.16.min.js" type="text/javascript"></script>
     <script src="./assets/js/datatables.bootstrap.1.10.16.min.js" type="text/javascript"></script>
+    <script src="./assets/js/datatables.fixedcolumns.3.2.4.min.js" type="text/javascript"></script>
     <style type="text/css">
         .header-up {
             background: #003a63;
@@ -239,6 +240,24 @@
         #tickets td {
           white-space: inherit;
         }
+
+        #tickets th.sorting_desc {
+            background-image: none;
+        }
+
+        #tickets th.sorting_desc,
+        #tickets th.sorting_disabled {
+            padding-left: 10px;
+        }
+
+        .action-service-now,
+        .action-view {
+            cursor: pointer;
+        }
+
+        #tickets_filter {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -316,6 +335,15 @@
                                     </div>
                                     <table id="tickets" class="display" cellspacing="0" width="100%">
                                         <thead>
+                                            <tr id="filter_row">
+                                                <th>Incident No.</th>
+                                                <th>Issue</th>
+                                                <th>User</th>
+                                                <th>Time</th>
+                                                <th>Status</th>
+                                                <th></th>
+                                                <th></th>
+                                            </tr>
                                             <tr>
                                                 <th>Incident No.</th>
                                                 <th>Issue</th>

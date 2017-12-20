@@ -35,6 +35,15 @@ let allTickets = [];
 // } );
 
 $(document).ready(function() {
+  function stopPropagation(e) {
+    if (e.stopPropagetion != undefined) {
+      e.stopPropagation();
+    }
+    else {
+      e.cancelBubble = true;
+    }
+  }
+
   function getTickets() {
     $.ajax({
       type: "GET",
@@ -63,14 +72,32 @@ $(document).ready(function() {
             "createdOn": createdOn,
             "state": incidentState,
             "sysId": ticket.sys_id,
-            "actionOff": "<td data-ticket-number='" + ticket.number + "'><img src='"+ __dirname +"/assets/images/servicenow.png' class='servicedesk-icon action-off' data-ticket-sys-id='" + ticket.sys_id + "' data-ticket-number='" + ticket.number + "' aria-hidden='true'><p class='action-off' data-ticket-number='" + ticket.number + "' style='font-size:0px'>service</p></td>",
+            "actionOff": "<td data-ticket-number='" + ticket.number + "'><img src='"+ __dirname +"/assets/images/servicenow.png' class='servicedesk-icon action-service-now' data-ticket-sys-id='" + ticket.sys_id + "' data-ticket-number='" + ticket.number + "' aria-hidden='true'><p class='action-service-now' data-ticket-number='" + ticket.number + "' style='font-size:0px'>service</p></td>",
             "actionView": "<td data-ticket-number='" + ticket.number + "'><i class='fa fa-server action-view' data-ticket-number='"+ticket.number+"'  data-ticket-sys-id='" + ticket.sys_id + "' aria-hidden='true'><p style='font-size:0px' for='modal__trigger' class='action-view' data-ticket-number='"+ticket.number+"'>db</p></i></td>"
           };
 
           allTickets.push(data);
         });
 
-        $('#tickets').DataTable({
+        $('#tickets thead tr#filter_row th').each(function() {
+          let index = $(this).index();
+
+          if (index <= 4) {
+            let title = $('#tickets thead th').eq( index ).text();
+            let style;
+
+            if (index == 0 || index == 3) {
+              style = "width: 140px;";
+            }
+            else if (index == 2 || index == 4) {
+              style = "width: 110px;";
+            }
+
+            $(this).html('<input type="text" onclick="stopPropagation(event);" style="' + style + '" placeholder="Search ' + title + '" />');
+          }
+        });
+
+        let table = $('#tickets').DataTable({
           data: allTickets,
           columns: [
             {data: 'number', orderable: false, width: "15%"},
@@ -93,14 +120,20 @@ $(document).ready(function() {
           //     targets: 1
           //   }
           // ],
-          order: [[0, "desc"]]
+          order: [[0, "desc"]],
+          orderCellsTop: true
         });
 
+        $('#tickets thead input').on('keyup change', function() {
+          table.column( $(this).parent().index() + ':visible' )
+            .search( this.value )
+            .draw();
+        });
       }
     });
   }
 
-  $('#tickets').on('click', '.action-off', function(e) {
+  $('#tickets').on('click', '.action-service-now', function(e) {
     let sysId = $(this).attr('data-ticket-sys-id');
     shell.openExternal(serviceNowBaseUrl + sysId);
   });
