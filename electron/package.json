@@ -35,13 +35,12 @@
     "toastr": "^2.1.4"
   },
   "build": {
-    
     "appId": "com.alorica.helpme",
     "win": {
       "target": "nsis",
       "icon": "build/icon.ico"
     },
-     "linux": {
+    "linux": {
       "target": [
         "AppImage",
         "deb"
