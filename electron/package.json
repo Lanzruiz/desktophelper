@@ -1,6 +1,6 @@
 {
   "name": "HelpMe",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "helpme app",
   "homepage": "http://alorica.com",
   "main": "app.js",
