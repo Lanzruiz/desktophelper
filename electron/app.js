@@ -30,12 +30,35 @@ let appIcon = null;
 // Auto upadater //
 ///////////////////
 
+
+let currentWindow;
+
+let profileWindow;
+let searchProfileWindow;
+let detailsWindow;
+let serviceWindow;
+let agentWindow;
+
 function resetStore() {
   settings.save(settingsKeys.helpMeUrl, host);
   settings.save(settingsKeys.helpMeSecret, secret);
   settings.save(settingsKeys.helpMeEndpoints, endpoints);
   settings.save(settingsKeys.platform, process.platform);
   settings.reset();
+}
+
+const isSecondInstance = app.makeSingleInstance((commandLine, workingDirectory) => {
+  if (currentWindow) {
+    if (currentWindow.isMinimized()) {
+      currentWindow.restore()
+    }
+
+    currentWindow.focus();
+  }
+});
+
+if (isSecondInstance) {
+  app.quit();
 }
 
 app.on('ready', function () {
@@ -46,21 +69,21 @@ app.on('ready', function () {
 
   appIcon.setToolTip("Help Me Application!");
 
-  let profileWindow;
-  let searchProfileWindow;
-  let detailsWindow;
-  let serviceWindow;
-  let agentWindow;
-
   var iShouldQuit = app.makeSingleInstance(function(commandLine, workingDirectory) {
     if (mainWindow) {
-        if (mainWindow.isMinimized()) mainWindow.restore();
-        mainWindow.show();
-        mainWindow.focus();
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
+
+      currentWindow = mainWindow;
+      mainWindow.show();
+      mainWindow.focus();
     }
     return true;
-});
-if(iShouldQuit){app.quit();return;}
+  });
+  if(iShouldQuit){app.quit();return;}
+
+
 
   function showAgentWindow() {
     agentWindow = new BrowserWindow({
@@ -71,6 +94,7 @@ if(iShouldQuit){app.quit();return;}
     });
     agentWindow.loadURL('file://' + __dirname + '/role_agent.html');
     agentWindow.setResizable(false);
+    currentWindow = agentWindow;
     agentWindow.show();
   }
 
@@ -83,6 +107,7 @@ if(iShouldQuit){app.quit();return;}
       frame: config.browserWindows.frame
     });
     serviceWindow.loadURL('file://' + __dirname + '/role_service.html');
+    currentWindow = serviceWindow;
     serviceWindow.show();
   }
 
@@ -115,6 +140,7 @@ if(iShouldQuit){app.quit();return;}
     });
     profileWindow.loadURL('file://' + __dirname + '/profile.html');
     profileWindow.setResizable(false);
+    currentWindow = profileWindow;
     profileWindow.show();
     mainWindow.hide();
   });
@@ -130,6 +156,7 @@ if(iShouldQuit){app.quit();return;}
     })
     detailsWindow.loadURL('file://' + __dirname + '/ticket_details.html');
     detailsWindow.once('ready-to-show', () => {
+      currentWindow = detailsWindow
       detailsWindow.show();
     });
 
@@ -152,6 +179,7 @@ if(iShouldQuit){app.quit();return;}
       profileWindow = null;
     }
 
+    currentWindow = mainWindow;
     mainWindow.show();
   });
 
@@ -162,6 +190,7 @@ if(iShouldQuit){app.quit();return;}
       agentWindow = null;
     }
 
+    currentWindow = mainWindow;
     mainWindow.show();
   });
 
@@ -172,6 +201,7 @@ if(iShouldQuit){app.quit();return;}
       serviceWindow = null;
     }
 
+    currentWindow = mainWindow;
     mainWindow.show();
   });
 
@@ -181,6 +211,7 @@ if(iShouldQuit){app.quit();return;}
       detailsWindow = null;
     }
 
+    currentWindow = serviceWindow;
     serviceWindow.show();
   });
 
@@ -197,6 +228,7 @@ if(iShouldQuit){app.quit();return;}
       frame: config.browserWindows.frame
     });
     searchProfileWindow.loadURL('file://' + __dirname + '/profile_field_search.html');
+    currentWindow = searchProfileWindow;
     searchProfileWindow.show();
     profileWindow.hide();
   });
@@ -207,6 +239,7 @@ if(iShouldQuit){app.quit();return;}
       searchProfileWindow = null;
     }
 
+    currentWindow = profileWindow;
     profileWindow.show();
     profileWindow.webContents.send('load-profile-field', arg);
   });
@@ -217,6 +250,7 @@ if(iShouldQuit){app.quit();return;}
       searchProfileWindow = null;
     }
 
+    currentWindow = profileWindow;
     profileWindow.show();
   });
 
