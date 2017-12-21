@@ -46,9 +46,10 @@ $(document).ready(function() {
         'Content-Type': "application/json"
       },
       success: function(result) {
-        let {general, system, processes, cpu, memory, disk, battery, graphics, fileSystem, network, currentLoad} = result;
+        let {location, general, system, processes, cpu, memory, disk, battery, graphics, os, fileSystem, network, currentLoad} = result;
 
         let systemInformation = {
+          location: location,
           general: general,
           system: system,
           cpu: cpu,
@@ -56,6 +57,7 @@ $(document).ready(function() {
           disk: disk,
           battery: battery,
           graphics: graphics,
+          os: os,
           fileSystem: fileSystem,
           network: network,
           currentLoad: currentLoad
