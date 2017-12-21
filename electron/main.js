@@ -17,15 +17,20 @@ let accessToken;
 
 $(document).ready(function() {
 
+  function toggleSubmitDisabledProperty() {
+    let username = $("#username").val();
+    let password = $("#password").val();
 
-  $("#login").prop("disabled", "disabled");
+    if (!username || !password) {
+      $("#login").prop("disabled", "disabled");
+      return;
+    }
 
-  $("#username").on("keyup", function () {
-      if ($(this).val() != "") {
-        $("#login").prop("disabled", false);
-      } else {
-        $("#login").prop("disabled", "disabled");
-      }
+    $("#login").prop("disabled", false);
+  }
+
+  $("#username, #password").on("keyup", function () {
+    toggleSubmitDisabledProperty();
   });
 
 
