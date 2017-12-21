@@ -51,9 +51,11 @@ $(document).ready(function() {
     if (!location) {
       hasError = true;
       $('#location').addClass('has-error');
+      $('#location_search_button').addClass('has-error');
     }
     else {
       $('#location').removeClass('has-error');
+      $('#location_search_button').removeClass('has-error');
     }
 
     if (!businessUnit) {
@@ -67,9 +69,11 @@ $(document).ready(function() {
     if (!client) {
       hasError = true;
       $('#client').addClass('has-error');
+      $('#client_search_button').addClass('has-error');
     }
     else {
       $('#client').removeClass('has-error');
+      $('#client_search_button').removeClass('has-error');
     }
 
     if (!callBackNumber) {
