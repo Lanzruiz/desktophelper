@@ -12,7 +12,6 @@
   "author": "Alorica GBS <xyz@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^1.7.9",
     "electron-builder": "^19.48.3",
     "electron-packager": "^10.1.0",
     "electron-prebuilt": "^0.28.3",
@@ -23,6 +22,7 @@
     "current-processes": "^0.2.1",
     "datatables.net": "^1.10.16",
     "datatables.net-dt": "^1.10.16",
+    "electron": "^1.7.9",
     "electron-is-dev": "^0.3.0",
     "electron-localshortcut": "^2.0.2",
     "electron-log": "^2.2.13",
