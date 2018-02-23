@@ -5,15 +5,16 @@
   "homepage": "http://alorica.com",
   "main": "app.js",
   "scripts": {
+    "postinstall": "install-app-deps",
     "start": "electron .",
     "pack": "build --dir",
-    "dist": "build -wl --x64 --ia32"
+    "dist": "build -l --x64 --ia32"
   },
   "author": "Alorica GBS <xyz@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "electron": "^1.7.9",
-    "electron-builder": "^19.48.3",
+    "electron": "1.7.10",
+    "electron-builder": "^19.49.2",
     "electron-packager": "^10.1.0",
     "electron-prebuilt": "^0.28.3",
     "http-server": "^0.9.0"
